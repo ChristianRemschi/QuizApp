@@ -19,7 +19,6 @@ import com.example.quizapp.ui.theme.DeepOrange
 import com.example.quizapp.ui.theme.QuizAppTheme
 
 
-private const val TAG = "MyActivity"
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,9 +26,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             QuizAppTheme {
+
                 Scaffold(
                     modifier = Modifier.fillMaxSize()
-                ) { innerPadding->
+                ) { innerPadding ->
                     Surface(
                         color = DeepOrange,
                         modifier = Modifier.padding(innerPadding).fillMaxSize()
@@ -68,4 +68,3 @@ fun GreetingPreview() {
         DynamicContent(listOf("First", "Second", "Third"))
     }
 }
-
