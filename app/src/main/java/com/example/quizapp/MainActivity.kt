@@ -4,14 +4,22 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.quizapp.ui.theme.DeepOrange
 import com.example.quizapp.ui.theme.QuizAppTheme
+
+
+private const val TAG = "MyActivity"
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,11 +27,15 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             QuizAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                Scaffold(
+                    modifier = Modifier.fillMaxSize()
+                ) { innerPadding->
+                    Surface(
+                        color = DeepOrange,
+                        modifier = Modifier.padding(innerPadding).fillMaxSize()
+                    ) {
+                        ScrollableList()
+                    }
                 }
             }
         }
@@ -31,17 +43,29 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun DynamicContent(items: List<String>) {
+    Column {
+        for (item in items) {
+            Text(item)
+        }
+    }
 }
+@Composable
+fun ScrollableList() {
+    val elems = (0..100).map { "Elem $it" }
+    LazyColumn {
+        items(elems) {
+            Text(it)
+        }
+    }
+}
+
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     QuizAppTheme {
-        Greeting("Android")
+        DynamicContent(listOf("First", "Second", "Third"))
     }
 }
+
