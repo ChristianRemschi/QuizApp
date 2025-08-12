@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import android.content.ContextWrapper
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -37,10 +38,16 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+
+// Funzione per trovare l'Activity a partire da un Context
+fun ContextWrapper.findActivity(): Activity? = when (this) {
+    is Activity -> this
+    else -> baseContext as? ContextWrapper
+}?.findActivity()
+
 @Composable
 fun QuizAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
@@ -49,17 +56,20 @@ fun QuizAppTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
 
     val view = LocalView.current
     if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primaryContainer.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
+        val activity = (view.context as? Activity) ?: (view.context as? ContextWrapper)?.findActivity()
+        activity?.let {
+            SideEffect {
+                val window = it.window
+                window.statusBarColor = colorScheme.primaryContainer.toArgb()
+                WindowCompat.getInsetsController(window, view)
+                    .isAppearanceLightStatusBars = !darkTheme
+            }
         }
     }
 

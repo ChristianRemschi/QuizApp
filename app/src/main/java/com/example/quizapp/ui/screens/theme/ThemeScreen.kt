@@ -14,16 +14,23 @@ import androidx.compose.runtime.Composable
 import com.example.quizapp.data.models.Theme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.quizapp.ui.composables.AppBar
 
 @Composable
-fun ThemeScreen(state: ThemeState
-                , onThemeSelected: (Theme)
-    -> Unit) {
-    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding->
+fun ThemeScreen(
+    state: ThemeState
+    , onThemeSelected: (Theme)
+    -> Unit,
+    navController: NavController
+) {
+    Scaffold( topBar = { AppBar(navController, title = "Theme") },
+            modifier = Modifier.fillMaxSize()) { innerPadding->
         Column(Modifier.padding(innerPadding).selectableGroup()) {
             Theme.entries.forEach { theme->
                     Row(

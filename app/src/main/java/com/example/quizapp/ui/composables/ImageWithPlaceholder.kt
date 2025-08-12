@@ -17,7 +17,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
 
 enum class Size { Sm, Lg }
 
@@ -25,7 +24,7 @@ enum class Size { Sm, Lg }
 fun ImageWithPlaceholder(uri: Uri?, size: Size) {
     if (uri?.path?.isNotEmpty() == true) {
         AsyncImage(
-            ImageRequest.Builder(LocalContext.current)
+            coil.request.ImageRequest.Builder(LocalContext.current)
                 .data(uri)
                 .crossfade(true)
                 .build(),

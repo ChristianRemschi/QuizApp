@@ -2,6 +2,8 @@ package com.example.quizapp.ui.composables
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.Contrast
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -41,7 +43,12 @@ fun AppBar(navController: NavController, title: String) {
             }
             if (title != "Settings") {
                 IconButton(onClick = { navController.navigate(QuizRoute.Settings) }) {
-                    Icon(Icons.Outlined.Settings, "Settings")
+                    Icon(Icons.Outlined.Person, "Profile")
+                }
+            }
+            if (title != "Theme") {
+                IconButton(onClick = { navController.navigate(QuizRoute.Theme) }) {
+                    Icon(Icons.Outlined.Contrast, "Theme")
                 }
             }
         },

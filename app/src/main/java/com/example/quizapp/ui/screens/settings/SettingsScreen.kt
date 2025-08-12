@@ -1,5 +1,6 @@
 package com.example.quizapp.ui.screens.settings
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,8 +19,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.quizapp.data.models.Theme
 import com.example.quizapp.ui.composables.AppBar
+import com.example.quizapp.ui.screens.theme.ThemeScreen
+import com.example.quizapp.ui.screens.theme.ThemeViewModel
+import com.example.quizapp.ui.theme.QuizAppTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SettingsScreen(
@@ -33,8 +40,7 @@ fun SettingsScreen(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(contentPadding).padding(12.dp).fillMaxSize()
-        ) {
-            OutlinedTextField(
+        ) {OutlinedTextField(
                 value = state.username,
                 onValueChange = onUsernameChanged,
                 label = { Text("Username") },
@@ -45,6 +51,4 @@ fun SettingsScreen(
                 text = state.username,
                 style = MaterialTheme.typography.bodyLarge
             )
-        }
-    }
-}
+        }}}
