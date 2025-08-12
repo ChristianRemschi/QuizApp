@@ -1,10 +1,8 @@
 package com.example.quizapp.data.repositories
 
 import android.content.ContentResolver
-import android.net.Uri
 import com.example.quizapp.data.database.Quiz
 import com.example.quizapp.data.database.QuizDAO
-import com.example.quizapp.utils.saveImageToStorage
 import kotlinx.coroutines.flow.Flow
 
 class QuizRepository(
@@ -16,5 +14,7 @@ class QuizRepository(
     suspend fun upsert(quiz: Quiz) = dao.upsert(quiz)
 
     suspend fun delete(quiz: Quiz) = dao.delete(quiz)
+
+    suspend fun populateSampleData() = dao.populateSampleData()
 
     }

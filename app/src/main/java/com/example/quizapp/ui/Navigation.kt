@@ -1,6 +1,5 @@
 package com.example.quizapp.ui
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -8,14 +7,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.example.quizapp.data.models.Theme
 import com.example.quizapp.ui.screens.home.HomeScreen
 import com.example.quizapp.ui.screens.settings.SettingsScreen
 import com.example.quizapp.ui.screens.settings.SettingsViewModel
 import com.example.quizapp.ui.screens.quizdetails.QuizDetailsScreen
 import com.example.quizapp.ui.screens.theme.ThemeScreen
 import com.example.quizapp.ui.screens.theme.ThemeViewModel
-import com.example.quizapp.ui.theme.QuizAppTheme
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
@@ -30,6 +27,8 @@ sealed interface QuizRoute {
 fun QuizNavGraph(navController: NavHostController) {
     val quizVm = koinViewModel<QuizViewModel>()
     val quizState by quizVm.state.collectAsStateWithLifecycle()
+
+    quizVm.populateDatabase()
 
     NavHost(
         navController = navController,

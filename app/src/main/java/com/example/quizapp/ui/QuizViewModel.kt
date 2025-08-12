@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quizapp.data.database.Quiz
 import com.example.quizapp.data.repositories.QuizRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -38,5 +39,13 @@ class QuizViewModel(
             repository.upsert(quiz.copy(isComplete = !quiz.isComplete))
         }
     }
+    private val quizDao = repository
 
+    fun populateDatabase() {
+        viewModelScope.launch(Dispatchers.IO) {
+            //if (quizDao.quizzes.count() == 0) {
+                quizDao.populateSampleData() //trovare un modo per farglielo fare una volta
+            //}
+        }
+    }
 }
