@@ -16,5 +16,8 @@ data class Quiz (
     var description: String,
 
     @ColumnInfo
-    val imageUri: String?
+    val imageUri: String?,
+
+    @ColumnInfo
+    var isComplete: Boolean
 )

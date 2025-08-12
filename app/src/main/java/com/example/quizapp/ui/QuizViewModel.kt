@@ -4,12 +4,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quizapp.data.database.Quiz
 import com.example.quizapp.data.repositories.QuizRepository
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 data class QuizState(val quizzes: List<Quiz>)
+
+interface QuizActions {
+    fun addQuiz(quiz: Quiz): Job
+    fun removeQuiz(quiz: Quiz): Job
+    fun toggleComplete(quiz: Quiz): Job
+}
 
 class QuizViewModel(
     private val repository: QuizRepository
@@ -19,5 +26,17 @@ class QuizViewModel(
         started = SharingStarted.WhileSubscribed(),
         initialValue = QuizState(emptyList())
     )
+
+    val actions = object : QuizActions {
+        override fun addQuiz(quiz: Quiz) = viewModelScope.launch {
+            repository.upsert(quiz)
+        }
+        override fun removeQuiz(quiz: Quiz) = viewModelScope.launch {
+            repository.delete(quiz)
+        }
+        override fun toggleComplete(quiz: Quiz) = viewModelScope.launch {
+            repository.upsert(quiz.copy(isComplete = !quiz.isComplete))
+        }
+    }
 
 }

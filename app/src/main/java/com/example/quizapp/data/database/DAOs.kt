@@ -11,4 +11,9 @@ interface QuizDAO {
     @Query("SELECT * FROM Quiz ORDER BY name ASC")
     fun getAll(): Flow<List<Quiz>>
 
+    @Upsert
+    suspend fun upsert(quiz: Quiz)
+
+    @Delete
+    suspend fun delete(quiz: Quiz)
 }

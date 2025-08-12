@@ -13,4 +13,8 @@ class QuizRepository(
 ) {
     val quizzes: Flow<List<Quiz>> = dao.getAll()
 
+    suspend fun upsert(quiz: Quiz) = dao.upsert(quiz)
+
+    suspend fun delete(quiz: Quiz) = dao.delete(quiz)
+
     }
