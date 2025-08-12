@@ -22,19 +22,19 @@ sealed interface QuizRoute {
 
 @Composable
 fun QuizNavGraph(navController: NavHostController) {
-    val QuizVm = koinViewModel<QuizViewModel>()
-    val QuizState by QuizVm.state.collectAsStateWithLifecycle()
+    val quizVm = koinViewModel<QuizViewModel>()
+    val quizState by quizVm.state.collectAsStateWithLifecycle()
 
     NavHost(
         navController = navController,
         startDestination = QuizRoute.Home
     ) {
         composable<QuizRoute.Home> {
-            HomeScreen(QuizState, navController)
+            HomeScreen(quizState, navController)
         }
         composable<QuizRoute.QuizDetails> { backStackEntry ->
             val route = backStackEntry.toRoute<QuizRoute.QuizDetails>()
-            val quiz = requireNotNull(QuizState.quizzes.find { it.id == route.quizId })
+            val quiz = requireNotNull(quizState.quizzes.find { it.id == route.quizId })
             QuizDetailsScreen(quiz, navController)
         }
 

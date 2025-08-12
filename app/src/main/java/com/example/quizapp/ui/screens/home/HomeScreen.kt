@@ -38,8 +38,8 @@ import com.example.quizapp.data.database.Quiz
 import com.example.quizapp.ui.QuizRoute
 import com.example.quizapp.ui.QuizState
 import com.example.quizapp.ui.composables.AppBar
-//import com.example.quizapp.ui.composables.ImageWithPlaceholder
-//import com.example.quizapp.ui.composables.Size
+import com.example.quizapp.ui.composables.ImageWithPlaceholder
+import com.example.quizapp.ui.composables.Size
 
 @Composable
 fun HomeScreen(state: QuizState, navController: NavController) {
@@ -86,7 +86,7 @@ fun QuizItem(item: Quiz, onClick: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val imageUri = Uri.parse(item.imageUri)
-            //ImageWithPlaceholder(imageUri, Size.Sm)
+            ImageWithPlaceholder(imageUri, Size.Sm)
             Spacer(Modifier.size(8.dp))
             Text(
                 item.name,

@@ -23,8 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.quizapp.data.database.Quiz
 import com.example.quizapp.ui.composables.AppBar
-//import com.example.quizapp.ui.composables.ImageWithPlaceholder
-//import com.example.quizapp.ui.composables.Size
+import com.example.quizapp.ui.composables.ImageWithPlaceholder
+import com.example.quizapp.ui.composables.Size
 
 @Composable
 fun QuizDetailsScreen(quiz: Quiz, navController: NavController) {
@@ -58,7 +58,7 @@ fun QuizDetailsScreen(quiz: Quiz, navController: NavController) {
             modifier = Modifier.padding(contentPadding).padding(12.dp).fillMaxSize()
         ) {
             val imageUri = Uri.parse(quiz.imageUri)
-            //ImageWithPlaceholder(imageUri, Size.Lg)
+            ImageWithPlaceholder(imageUri, Size.Lg)
             Text(
                 quiz.name,
                 style = MaterialTheme.typography.titleLarge

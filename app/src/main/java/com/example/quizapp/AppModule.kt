@@ -8,7 +8,6 @@ import com.example.quizapp.data.repositories.QuizRepository
 import com.example.quizapp.data.repositories.SettingsRepository
 import com.example.quizapp.ui.QuizViewModel
 import com.example.quizapp.ui.screens.settings.SettingsViewModel
-
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
