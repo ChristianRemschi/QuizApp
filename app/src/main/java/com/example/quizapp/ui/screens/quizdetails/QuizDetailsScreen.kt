@@ -57,8 +57,11 @@ fun QuizDetailsScreen(quiz: Quiz, navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(contentPadding).padding(12.dp).fillMaxSize()
         ) {
-            val imageUri = Uri.parse(quiz.imageUri)
-            ImageWithPlaceholder(imageUri, Size.Lg)
+            if(!quiz.imageUri.isNullOrEmpty()){
+                val imageUri = Uri.parse(quiz.imageUri)
+                ImageWithPlaceholder(imageUri, Size.Lg)
+            }
+
             Text(
                 quiz.name,
                 style = MaterialTheme.typography.titleLarge

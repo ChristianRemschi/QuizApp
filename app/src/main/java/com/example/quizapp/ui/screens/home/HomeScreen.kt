@@ -85,8 +85,10 @@ fun QuizItem(item: Quiz, onClick: () -> Unit) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val imageUri = Uri.parse(item.imageUri)
-            ImageWithPlaceholder(imageUri, Size.Sm)
+            if(!item.imageUri.isNullOrEmpty()){
+                val imageUri = Uri.parse(item.imageUri)
+                ImageWithPlaceholder(imageUri, Size.Lg)
+            }
             Spacer(Modifier.size(8.dp))
             Text(
                 item.name,
