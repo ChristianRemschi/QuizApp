@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.quizapp.data.database.Person
 import com.example.quizapp.data.database.Quiz
 import com.example.quizapp.data.database.QuizWithQuestions
 import com.example.quizapp.data.repositories.QuizRepository
@@ -50,6 +51,35 @@ class QuizViewModel(
                 quizDao.populateSampleData()
             }
         }
+    }
+
+    fun createAccount(username: String, password: String, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+
+            val existingUser = quizDao.getByUsername(username)
+            if (existingUser != null) {
+                // Account già esistente
+                onResult(false)
+            } else {
+                val newPerson = Person(
+                    name = username,
+                    password = password
+                )
+                repository.insertPerson(newPerson)
+                onResult(true)
+            }
+        }
+    }
+    fun login(username: String, password:String ,  onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            val user = quizDao.getByUsername(username)
+            if (user != null && user.password == password) {
+                onResult(true) // login riuscito
+            } else {
+                onResult(false) // login fallito
+            }
+        }
+
     }
 
 }

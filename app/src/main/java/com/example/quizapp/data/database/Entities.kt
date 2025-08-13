@@ -63,3 +63,44 @@ data class Answer(
     @ColumnInfo
     var isCorrect: Boolean = false
 )
+
+@Entity
+data class Person(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+
+    @ColumnInfo
+    var name: String,
+
+    @ColumnInfo
+    var password: String
+)
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = Person::class,
+            parentColumns = ["id"],
+            childColumns = ["personId"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = Quiz::class,
+            parentColumns = ["id"],
+            childColumns = ["quizId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
+data class Score(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+
+    @ColumnInfo(index = true)
+    val personId: Int,
+
+    @ColumnInfo(index = true)
+    val quizId: Int,
+
+    @ColumnInfo
+    val score: Int
+)

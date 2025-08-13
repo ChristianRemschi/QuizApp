@@ -1,6 +1,7 @@
 package com.example.quizapp.data.repositories
 
 import android.content.ContentResolver
+import com.example.quizapp.data.database.Person
 import com.example.quizapp.data.database.Quiz
 import com.example.quizapp.data.database.QuizDAO
 import kotlinx.coroutines.flow.Flow
@@ -18,5 +19,9 @@ class QuizRepository(
     suspend fun populateSampleData() = dao.populateSampleData()
 
     suspend fun getQuizzesCount() = dao.getQuizzesCount()
+
+    suspend fun insertPerson(person: Person) = dao.insertPerson(person)
+
+    suspend fun getByUsername(username: String) = dao.getByUsername(username)
 
     }

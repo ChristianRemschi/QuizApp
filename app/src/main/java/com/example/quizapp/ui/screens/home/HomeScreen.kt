@@ -38,6 +38,7 @@ fun HomeScreen(state: QuizState, navController: NavController) {
     Scaffold(
         topBar = { AppBar(navController, title = "Quiz") }
     ) { contentPadding ->
+
         if (state.quizzes.isNotEmpty()) {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),

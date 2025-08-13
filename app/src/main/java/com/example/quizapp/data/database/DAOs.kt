@@ -29,6 +29,32 @@ interface QuizDAO {
     suspend fun insertQuestion(question: Question): Long
 
     @Insert
+    suspend fun insertPerson(person: Person): Long
+
+    @Query("SELECT * FROM Person WHERE id = :id LIMIT 1")
+    suspend fun getById(id: Int): Person?
+
+    @Query("SELECT * FROM Person WHERE name = :username LIMIT 1")
+    suspend fun getByUsername(username: String): Person?
+
+    @Insert
+    suspend fun insertScore(score: Score): Long
+
+    @Query("SELECT * FROM Score WHERE personId = :personId")
+    suspend fun getScoresForPerson(personId: Int): List<Score>
+
+    @Query("""
+        SELECT * FROM Score
+        WHERE personId = :personId
+        ORDER BY score DESC
+        LIMIT 1
+    """)
+    suspend fun getBestScoreForPerson(personId: Int): Score?
+
+    @Delete
+    suspend fun deletePerson(person: Person)
+
+    @Insert
     suspend fun insertAnswer(answer: Answer): Long
 
     @Transaction

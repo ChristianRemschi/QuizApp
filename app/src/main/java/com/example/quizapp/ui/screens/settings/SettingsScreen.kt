@@ -18,27 +18,37 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.quizapp.ui.QuizRoute
+import com.example.quizapp.ui.QuizViewModel
 import com.example.quizapp.ui.composables.AppBar
+import kotlinx.coroutines.launch
 
 @Composable
 fun SettingsScreen(
     state: SettingsState,
     onUsernameChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
-    onLoginClicked: () -> Unit,
-    navController: NavController
+    navController: NavController,
+    quizViewModel: QuizViewModel
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
     Scaffold(
-        topBar = { AppBar(navController, title = "Login") }
+        topBar = { AppBar(navController, title = "Login") },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { contentPadding ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -83,7 +93,19 @@ fun SettingsScreen(
 
             // Login Button
             Button(
-                onClick = onLoginClicked,
+                onClick = {
+                    quizViewModel.login(state.username, state.password) { success ->
+                        if (success) {
+                            scope.launch {
+                                snackbarHostState.showSnackbar("Login con successo")
+                                navController.navigate(QuizRoute.Home)
+                            }
+                        } else {
+                            scope.launch {
+                                snackbarHostState.showSnackbar("Username o password errati")
+                            }
+                        }
+                    } },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = state.username.isNotBlank() && state.password.isNotBlank()
             ) {
@@ -91,9 +113,22 @@ fun SettingsScreen(
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-            TextButton(onClick = { /* nav to register */ }) {
+            TextButton(onClick = {
+                quizViewModel.createAccount(state.username, state.password) { success ->
+                    if (success) {
+                        onUsernameChanged("")
+                        onPasswordChanged("")
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Account creato con successo")
+                        }
+                    } else {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Username già esistente")
+                        }
+                    }
+                }
+                }) {
                 Text("Create account")
-
             }
         }
     }

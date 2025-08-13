@@ -35,6 +35,8 @@ fun QuizNavGraph(navController: NavHostController) {
     val quizVm = koinViewModel<QuizViewModel>()
     val quizState by quizVm.state.collectAsStateWithLifecycle()
 
+
+
     quizVm.populateDatabase()
 
     NavHost(
@@ -52,7 +54,7 @@ fun QuizNavGraph(navController: NavHostController) {
 
         composable<QuizRoute.Settings> {
             val settingsVm = koinViewModel<SettingsViewModel>()
-            SettingsScreen(settingsVm.state, settingsVm::setUsername, settingsVm::setPassword, settingsVm::login, navController)
+            SettingsScreen(settingsVm.state, settingsVm::setUsername, settingsVm::setPassword, navController, quizVm)
         }
         composable<QuizRoute.Theme> {
             val themeViewModel = koinViewModel<ThemeViewModel>()

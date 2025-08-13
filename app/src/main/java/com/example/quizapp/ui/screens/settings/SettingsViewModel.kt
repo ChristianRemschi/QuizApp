@@ -5,6 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.quizapp.data.database.Person
+import com.example.quizapp.data.database.QuizDAO
+import com.example.quizapp.data.repositories.QuizRepository
 import com.example.quizapp.data.repositories.SettingsRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -22,28 +25,19 @@ class SettingsViewModel(
 
     fun setUsername(username: String) {
         state = state.copy(username = username)
-        viewModelScope.launch {
-            repository.setUsername(username)
-        }
+//        viewModelScope.launch {
+//            repository.setUsername(username)
+//        }
     }
 
     fun setPassword(password: String) {
         state = state.copy(password = password)
-        viewModelScope.launch {
-            repository.setPassword(password)
-        }
+//        viewModelScope.launch {
+////            repository.setPassword(password)
+////        }
     }
 
-    fun login() {
-        viewModelScope.launch {
-            try {
-                repository.login(state.username, state.password)
-                // Navigate to home on success
-            } catch (e: Exception) {
-                // Handle error (show snackbar, etc.)
-            }
-        }
-    }
+
 
     init {
         viewModelScope.launch {
