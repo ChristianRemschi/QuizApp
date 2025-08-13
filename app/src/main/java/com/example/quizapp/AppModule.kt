@@ -23,6 +23,7 @@ val appModule = module {
             QuizDatabase::class.java,
             "Quiz"
         )
+            //.fallbackToDestructiveMigration()
             .build()
     }
 

@@ -41,11 +41,19 @@ class QuizViewModel(
     }
     private val quizDao = repository
 
+//    fun populateDatabase() {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            //if (quizDao.quizzes.count() == 0) {
+//                quizDao.populateSampleData() //trovare un modo per farglielo fare una volta
+//            //}
+//        }
+//    }
+
     fun populateDatabase() {
         viewModelScope.launch(Dispatchers.IO) {
-            //if (quizDao.quizzes.count() == 0) {
-                quizDao.populateSampleData() //trovare un modo per farglielo fare una volta
-            //}
+            if (quizDao.getQuizzesCount() == 0) {
+                quizDao.populateSampleData()
+            }
         }
     }
 }

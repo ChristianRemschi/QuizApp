@@ -13,6 +13,9 @@ interface QuizDAO {
     @Query("SELECT * FROM Quiz ORDER BY name ASC")
     fun getAll(): Flow<List<Quiz>>
 
+    @Query("SELECT COUNT(*) FROM Quiz")
+    suspend fun getQuizzesCount(): Int
+
     @Upsert
     suspend fun upsert(quiz: Quiz)
 

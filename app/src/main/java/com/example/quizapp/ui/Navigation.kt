@@ -39,7 +39,7 @@ fun QuizNavGraph(navController: NavHostController) {
         }
         composable<QuizRoute.QuizDetails> { backStackEntry ->
             val route = backStackEntry.toRoute<QuizRoute.QuizDetails>()
-            val quiz = requireNotNull(quizState.quizzes.find { it.id == route.quizId })
+            val quiz = requireNotNull(quizState.quizzes.find { it.id.toInt() == route.quizId })
             QuizDetailsScreen(quiz, navController)
         }
 

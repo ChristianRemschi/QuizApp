@@ -49,7 +49,7 @@ fun HomeScreen(state: QuizState, navController: NavController) {
                 items(state.quizzes) { item ->
                     QuizItem(
                         item,
-                        onClick = { navController.navigate(QuizRoute.QuizDetails(item.id)) }
+                        onClick = { navController.navigate(QuizRoute.QuizDetails(item.id.toInt())) }
                     )
                 }
             }

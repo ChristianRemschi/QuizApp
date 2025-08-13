@@ -17,4 +17,6 @@ class QuizRepository(
 
     suspend fun populateSampleData() = dao.populateSampleData()
 
+    suspend fun getQuizzesCount() = dao.getQuizzesCount()
+
     }
