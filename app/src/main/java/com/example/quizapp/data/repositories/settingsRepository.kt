@@ -11,9 +11,14 @@ class SettingsRepository(
 ) {
     companion object {
         private val USERNAME_KEY = stringPreferencesKey("username")
+        private val PASSWORD_KEY = stringPreferencesKey("password")
     }
 
     val username = dataStore.data.map { it[USERNAME_KEY] ?: "" }
+    val password = dataStore.data.map { it[PASSWORD_KEY] ?: "" }
 
     suspend fun setUsername(username: String) = dataStore.edit { it[USERNAME_KEY] = username }
+    suspend fun setPassword(password: String) = dataStore.edit { it[PASSWORD_KEY] = password }
+    fun login(username: String, password: String) { }
+
 }

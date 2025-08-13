@@ -52,7 +52,7 @@ fun QuizNavGraph(navController: NavHostController) {
 
         composable<QuizRoute.Settings> {
             val settingsVm = koinViewModel<SettingsViewModel>()
-            SettingsScreen(settingsVm.state, settingsVm::setUsername, navController)
+            SettingsScreen(settingsVm.state, settingsVm::setUsername, settingsVm::setPassword, settingsVm::login, navController)
         }
         composable<QuizRoute.Theme> {
             val themeViewModel = koinViewModel<ThemeViewModel>()
