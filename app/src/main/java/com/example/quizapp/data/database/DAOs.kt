@@ -32,6 +32,10 @@ interface QuizDAO {
     suspend fun insertAnswer(answer: Answer): Long
 
     @Transaction
+    @Query("SELECT * FROM Quiz WHERE id = :quizId")
+    suspend fun getQuizWithQuestionsAndAnswers(quizId: Int): QuizWithQuestions
+
+    @Transaction
     suspend fun populateSampleData() {
         // Quiz 1 - Matematica
         val quizId1 = insertQuiz(

@@ -1,8 +1,11 @@
 package com.example.quizapp.ui
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quizapp.data.database.Quiz
+import com.example.quizapp.data.database.QuizWithQuestions
 import com.example.quizapp.data.repositories.QuizRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -41,14 +44,6 @@ class QuizViewModel(
     }
     private val quizDao = repository
 
-//    fun populateDatabase() {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            //if (quizDao.quizzes.count() == 0) {
-//                quizDao.populateSampleData() //trovare un modo per farglielo fare una volta
-//            //}
-//        }
-//    }
-
     fun populateDatabase() {
         viewModelScope.launch(Dispatchers.IO) {
             if (quizDao.getQuizzesCount() == 0) {
@@ -56,4 +51,5 @@ class QuizViewModel(
             }
         }
     }
+
 }

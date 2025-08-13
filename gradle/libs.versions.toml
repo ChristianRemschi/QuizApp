@@ -25,6 +25,9 @@ navigationComposeAndroid = "2.9.3"
 ui = "1.6.0"
 ksp = "2.0.0-1.0.24"
 room = "2.6.1"
+runtimeLivedata = "1.8.3"
+adsMobileSdk = "0.18.0-beta01"
+foundationLayoutAndroid = "1.7.2"
 
 
 [libraries]
@@ -61,6 +64,9 @@ ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
+ads-mobile-sdk = { group = "com.google.android.libraries.ads.mobile.sdk", name = "ads-mobile-sdk", version.ref = "adsMobileSdk" }
+androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "foundationLayoutAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

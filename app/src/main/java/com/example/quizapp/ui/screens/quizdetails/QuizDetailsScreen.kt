@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.PlayCircle
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -22,6 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.quizapp.data.database.Quiz
+import com.example.quizapp.ui.QuizRoute
 import com.example.quizapp.ui.composables.AppBar
 import com.example.quizapp.ui.composables.ImageWithPlaceholder
 import com.example.quizapp.ui.composables.Size
@@ -71,6 +74,9 @@ fun QuizDetailsScreen(quiz: Quiz, navController: NavController) {
                 quiz.description,
                 style = MaterialTheme.typography.bodyMedium
             )
+            IconButton(onClick = { navController.navigate(QuizRoute.Play(quiz.id)) }) {
+                Icon(Icons.Outlined.PlayCircle, "Play")
+            }
         }
     }
 }

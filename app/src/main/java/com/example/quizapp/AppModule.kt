@@ -8,6 +8,7 @@ import com.example.quizapp.data.repositories.QuizRepository
 import com.example.quizapp.data.repositories.SettingsRepository
 import com.example.quizapp.data.repositories.ThemeRepository
 import com.example.quizapp.ui.QuizViewModel
+import com.example.quizapp.ui.screens.play.PlayViewModel
 import com.example.quizapp.ui.screens.settings.SettingsViewModel
 import com.example.quizapp.ui.screens.theme.ThemeViewModel
 import org.koin.core.module.dsl.viewModel
@@ -41,4 +42,6 @@ val appModule = module {
     viewModel { QuizViewModel(get()) }
 
     viewModel { ThemeViewModel(get()) }
+
+    viewModel { PlayViewModel(get<QuizDatabase>().QuizDAO()) }
 }
