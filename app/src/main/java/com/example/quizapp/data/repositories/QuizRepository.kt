@@ -24,4 +24,12 @@ class QuizRepository(
 
     suspend fun getByUsername(username: String) = dao.getByUsername(username)
 
+    suspend fun getQuiz(id: Int) = dao.getQuiz(id)
+//
+//    suspend fun getScoresByPerson(id: Int) = dao.getScoresByPerson(id)
+
+    suspend fun getPersonById(id: Int) = dao.getById(id)
+
+    suspend fun updatePerson(person: Person) = dao.updatePerson(person)
+
     }

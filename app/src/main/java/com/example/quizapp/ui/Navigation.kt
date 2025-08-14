@@ -2,6 +2,7 @@ package com.example.quizapp.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -9,9 +10,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.toRoute
+import com.example.quizapp.data.repositories.AuthStateManager
 import com.example.quizapp.ui.screens.home.HomeScreen
 import com.example.quizapp.ui.screens.play.PlayScreen
 import com.example.quizapp.ui.screens.play.PlayViewModel
+import com.example.quizapp.ui.screens.profile.ProfileScreen
+import com.example.quizapp.ui.screens.profile.ProfileViewModel
 import com.example.quizapp.ui.screens.settings.SettingsScreen
 import com.example.quizapp.ui.screens.settings.SettingsViewModel
 import com.example.quizapp.ui.screens.quizdetails.QuizDetailsScreen
@@ -21,6 +25,7 @@ import io.ktor.http.parametersOf
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import org.koin.java.KoinJavaComponent.getKoin
 
 sealed interface QuizRoute {
     @Serializable data object Home : QuizRoute
@@ -32,10 +37,13 @@ sealed interface QuizRoute {
 
 @Composable
 fun QuizNavGraph(navController: NavHostController) {
+    val authStateManager = remember {
+        getKoin().get<AuthStateManager>()
+    }
+    val userId by authStateManager.currentUserId.collectAsStateWithLifecycle(null)
+    val loggedIn = userId != null
     val quizVm = koinViewModel<QuizViewModel>()
     val quizState by quizVm.state.collectAsStateWithLifecycle()
-
-
 
     quizVm.populateDatabase()
 
@@ -48,14 +56,27 @@ fun QuizNavGraph(navController: NavHostController) {
         }
         composable<QuizRoute.QuizDetails> { backStackEntry ->
             val route = backStackEntry.toRoute<QuizRoute.QuizDetails>()
-            val quiz = requireNotNull(quizState.quizzes.find { it.id.toInt() == route.quizId })
+            val quiz = requireNotNull(quizState.quizzes.find { it.id == route.quizId })
             QuizDetailsScreen(quiz, navController)
         }
 
         composable<QuizRoute.Settings> {
             val settingsVm = koinViewModel<SettingsViewModel>()
-            SettingsScreen(settingsVm.state, settingsVm::setUsername, settingsVm::setPassword, navController, quizVm)
+            if (!loggedIn) {
+                SettingsScreen(
+                    settingsVm.state,
+                    settingsVm::setUsername,
+                    settingsVm::setPassword,
+                    navController,
+                    quizVm
+                )
+            }
+            else {
+                val profileVm = koinViewModel<ProfileViewModel>()
+                ProfileScreen(profileVm, navController, userId!!)
+            }
         }
+
         composable<QuizRoute.Theme> {
             val themeViewModel = koinViewModel<ThemeViewModel>()
             val themeState by themeViewModel.state.collectAsStateWithLifecycle()

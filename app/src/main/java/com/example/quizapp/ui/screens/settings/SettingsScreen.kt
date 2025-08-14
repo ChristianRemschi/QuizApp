@@ -111,7 +111,7 @@ fun SettingsScreen(
             ) {
                 Text("Login", style = MaterialTheme.typography.labelLarge)
             }
-
+            //Register Button
             Spacer(modifier = Modifier.height(16.dp))
             TextButton(onClick = {
                 quizViewModel.createAccount(state.username, state.password) { success ->

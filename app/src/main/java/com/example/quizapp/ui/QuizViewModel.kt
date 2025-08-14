@@ -1,13 +1,11 @@
 package com.example.quizapp.ui
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quizapp.data.database.Person
 import com.example.quizapp.data.database.Quiz
-import com.example.quizapp.data.database.QuizWithQuestions
 import com.example.quizapp.data.repositories.QuizRepository
+import com.example.quizapp.data.repositories.AuthStateManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,7 +22,8 @@ interface QuizActions {
 }
 
 class QuizViewModel(
-    private val repository: QuizRepository
+    private val repository: QuizRepository,
+    private val authStateManager: AuthStateManager
 ) : ViewModel() {
     val state = repository.quizzes.map { QuizState(quizzes = it) }.stateIn(
         scope = viewModelScope,
@@ -63,7 +62,9 @@ class QuizViewModel(
             } else {
                 val newPerson = Person(
                     name = username,
-                    password = password
+                    password = password,
+                    photo = "",
+                    biography = ""
                 )
                 repository.insertPerson(newPerson)
                 onResult(true)
@@ -74,6 +75,7 @@ class QuizViewModel(
         viewModelScope.launch {
             val user = quizDao.getByUsername(username)
             if (user != null && user.password == password) {
+                authStateManager.setLoggedInUser(user.id)
                 onResult(true) // login riuscito
             } else {
                 onResult(false) // login fallito

@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
@@ -22,6 +23,12 @@ interface QuizDAO {
     @Delete
     suspend fun delete(quiz: Quiz)
 
+    @Query("SELECT * FROM Quiz WHERE id = :id LIMIT 1")
+    suspend fun getQuiz(id: Int): Quiz
+
+//    @Query("SELECT * FROM Score WHERE personId = :id")
+//    suspend fun getScoresByPerson(id: Int)
+
     @Insert
     suspend fun insertQuiz(quiz: Quiz): Long
 
@@ -36,6 +43,9 @@ interface QuizDAO {
 
     @Query("SELECT * FROM Person WHERE name = :username LIMIT 1")
     suspend fun getByUsername(username: String): Person?
+
+    @Update
+    suspend fun updatePerson(person: Person)
 
     @Insert
     suspend fun insertScore(score: Score): Long

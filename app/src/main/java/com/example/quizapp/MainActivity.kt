@@ -21,6 +21,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val themeViewModel = koinViewModel<ThemeViewModel>()
             val themeState by themeViewModel.state.collectAsStateWithLifecycle()
+
             QuizAppTheme(
                 darkTheme = when (themeState.theme) {
                     Theme.Light -> false

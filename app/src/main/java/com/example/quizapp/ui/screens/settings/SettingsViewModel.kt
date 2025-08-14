@@ -25,9 +25,9 @@ class SettingsViewModel(
 
     fun setUsername(username: String) {
         state = state.copy(username = username)
-//        viewModelScope.launch {
-//            repository.setUsername(username)
-//        }
+        viewModelScope.launch {
+            repository.setUsername(username)
+        }
     }
 
     fun setPassword(password: String) {

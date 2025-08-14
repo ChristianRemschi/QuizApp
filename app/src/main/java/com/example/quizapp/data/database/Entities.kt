@@ -73,8 +73,15 @@ data class Person(
     var name: String,
 
     @ColumnInfo
-    var password: String
+    var password: String,
+
+    @ColumnInfo
+    var photo: String?,
+
+    @ColumnInfo
+    var biography: String?
 )
+
 @Entity(
     foreignKeys = [
         ForeignKey(
@@ -91,6 +98,7 @@ data class Person(
         )
     ]
 )
+
 data class Score(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
