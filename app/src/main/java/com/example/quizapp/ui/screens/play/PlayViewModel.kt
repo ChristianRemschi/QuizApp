@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.quizapp.data.database.Score
 
 class PlayViewModel(private val quizDao: QuizDAO) : ViewModel() {
 
@@ -18,6 +19,16 @@ class PlayViewModel(private val quizDao: QuizDAO) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val data = quizDao.getQuizWithQuestionsAndAnswers(quizId)
             _quizData.postValue(data)
+        }
+    }
+    fun insertScore( personId: Int, quizId: Int, score: Int ){
+        viewModelScope.launch(Dispatchers.IO) {
+            val newScore = Score(
+                personId = personId,
+                quizId = quizId,
+                score = score
+            )
+            quizDao.insertScore(newScore)
         }
     }
 }

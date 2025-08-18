@@ -26,8 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.navigation.NavController
-import com.example.quizapp.data.database.Quiz
-import com.example.quizapp.ui.QuizViewModel
 import com.example.quizapp.ui.composables.AppBar
 
 //@Composable
@@ -35,13 +33,14 @@ import com.example.quizapp.ui.composables.AppBar
 //
 //}
 @Composable
-fun PlayScreen(viewModel: PlayViewModel, quizId: Int, navController: NavController) {
+fun PlayScreen(viewModel: PlayViewModel, quizId: Int, userId: Int, navController: NavController) {
     val quizData by viewModel.quizData.observeAsState()
-
     // Stato per le risposte selezionate: questionId -> answerId
     val selectedAnswers = remember { mutableStateMapOf<Int, Int>() }
     // Stato per attivare il controllo delle risposte
     var showResult by remember { mutableStateOf(false) }
+
+    var score = 0
 
     LaunchedEffect(quizId) {
         viewModel.loadQuiz(quizId)
@@ -78,6 +77,11 @@ fun PlayScreen(viewModel: PlayViewModel, quizId: Int, navController: NavControll
                             }
                         } else Color.Transparent
 
+                        if (answer.isCorrect && isSelected) {
+                            score += 1
+                        }
+
+
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
@@ -107,7 +111,7 @@ fun PlayScreen(viewModel: PlayViewModel, quizId: Int, navController: NavControll
 
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
-                    onClick = { showResult = true },
+                    onClick = { showResult = true; viewModel.insertScore(userId, quizId, score) },
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 ) {
                     Text("Controlla Risposte")

@@ -4,8 +4,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Contrast
 import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.PlayCircle
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -36,11 +34,11 @@ fun AppBar(navController: NavController, title: String) {
             }
         },
         actions = {
-            if (title == "Quiz") {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Outlined.Search, contentDescription = "Search")
-                }
-            }
+//            if (title == "Quiz") {
+//                IconButton(onClick = { /*TODO*/ }) {
+//                    Icon(Icons.Outlined.Search, contentDescription = "Search")
+//                }
+//            }
             if (title != "Login" && title != "Profile") {
                 IconButton(onClick = { navController.navigate(QuizRoute.Settings) }) {
                     Icon(Icons.Outlined.Person, "Profile")

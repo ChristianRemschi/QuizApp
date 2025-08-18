@@ -89,7 +89,8 @@ fun QuizNavGraph(navController: NavHostController) {
 
             val playViewModel = koinViewModel<PlayViewModel>()
 
-            PlayScreen(playViewModel,route.quizId, navController)
+            PlayScreen(playViewModel,route.quizId, userId!!, navController)
+
         }
 
     }

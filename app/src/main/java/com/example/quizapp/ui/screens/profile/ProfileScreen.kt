@@ -268,7 +268,7 @@ private fun EditProfileView(
                 //onClick = cameraLauncher::captureImage,
                 onClick = {
                     //if (permissionHandler.statuses.all { it.value.isGranted })
-                    if (true) { //TO DO forse permessi
+                    if (true) { //TODO forse permessi o metti la riga sopra
                         cameraLauncher.captureImage()
                     } else {
                         permissionHandler.launchPermissionRequest()
