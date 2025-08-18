@@ -36,23 +36,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.quizapp.R
 import com.example.quizapp.data.database.Quiz
 import com.example.quizapp.data.database.Score
 import com.example.quizapp.ui.QuizRoute
 import com.example.quizapp.ui.composables.AppBar
+import com.example.quizapp.utils.rememberCameraLauncher
+import com.example.quizapp.utils.saveImageToStorage
 
 @Composable
 fun ProfileScreen(
     viewModel: ProfileViewModel,
     navController: NavHostController,
-    userId: Int // Dovresti passare l'ID dell'utente loggato
+    userId: Int
 ) {
     // Carica i dati dell'utente all'avvio
     LaunchedEffect(Unit) {
@@ -96,7 +100,6 @@ fun ProfileScreen(
                     onCancel = { isEditing = false }
                 )
             } else {
-                // Visualizzazione normale
                 ViewProfileView(
                     name = user?.name ?: "",
                     bio = user?.biography,
@@ -184,19 +187,36 @@ private fun EditProfileView(
     onSave: () -> Unit,
     onCancel: () -> Unit
 ) {
+    val ctx = LocalContext.current
+    var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
+    val cameraLauncher = rememberCameraLauncher(
+        //onPictureTaken = { imageUri -> saveImageToStorage(imageUri, ctx.contentResolver)
+        onPictureTaken = { uri ->
+            capturedImageUri = uri
+            onImageSelected(uri)
+        })
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         // Selezione immagine
         Box(contentAlignment = Alignment.Center) {
             ProfileImage(
-                selectedImageUri?.toString() ?: currentPhoto,
+                capturedImageUri?.toString() ?: selectedImageUri?.toString() ?: currentPhoto,
                 size = 120.dp
             )
 
             IconButton(
-                onClick = { /* Apri la galleria o la fotocamera */ },
+                onClick = cameraLauncher::captureImage,
                 modifier = Modifier.align(Alignment.BottomEnd)
             ) {
-                Icon(Icons.Default.Edit, contentDescription = "Cambia foto")
+                Icon(Icons.Default.Edit, contentDescription = "Take a Picture")
+            }
+            if (cameraLauncher.capturedImageUri.path?.isNotEmpty() == true) {
+                AsyncImage(
+                    model = ImageRequest.Builder(ctx)
+                        .data(cameraLauncher.capturedImageUri)
+                        .crossfade(true)
+                        .build(),
+                    "Captured Image"
+                )
             }
         }
 
@@ -241,17 +261,19 @@ private fun ProfileImage(photoUri: String?, size: Dp) {
         .size(size)
         .clip(CircleShape)
 
-    if (photoUri != null) {
+    if (!photoUri.isNullOrBlank()) {
         AsyncImage(
             model = photoUri,
-            contentDescription = "Foto profilo",
+            contentDescription = "Profile Picture",
             modifier = imageModifier,
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
+            placeholder = painterResource(R.drawable.ic_default_profile),
+            error = painterResource(R.drawable.ic_default_profile)
         )
     } else {
         Image(
             painter = painterResource(R.drawable.ic_default_profile),
-            contentDescription = "Foto profilo predefinita",
+            contentDescription = "Default Profile Photo",
             modifier = imageModifier
         )
     }

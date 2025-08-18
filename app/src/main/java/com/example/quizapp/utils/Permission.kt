@@ -3,11 +3,9 @@ package com.example.quizapp.utils
 import android.app.Activity
 import android.content.pm.PackageManager
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember

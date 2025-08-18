@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,7 +19,7 @@ interface CameraLauncher {
 
 @Composable
 fun rememberCameraLauncher(
-    onPictureTaken: (imageUri: Uri) -> Unit = {}
+    onPictureTaken: (imageUri: Uri) -> Unit
 ): CameraLauncher {
     val ctx = LocalContext.current
 
