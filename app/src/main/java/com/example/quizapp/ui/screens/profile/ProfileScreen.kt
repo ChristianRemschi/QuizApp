@@ -1,6 +1,9 @@
 package com.example.quizapp.ui.screens.profile
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,6 +21,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -26,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -40,6 +45,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
@@ -50,7 +56,7 @@ import com.example.quizapp.data.database.Score
 import com.example.quizapp.ui.QuizRoute
 import com.example.quizapp.ui.composables.AppBar
 import com.example.quizapp.utils.rememberCameraLauncher
-import com.example.quizapp.utils.saveImageToStorage
+import com.example.quizapp.utils.rememberMultiplePermissions
 
 @Composable
 fun ProfileScreen(
@@ -61,6 +67,21 @@ fun ProfileScreen(
     // Carica i dati dell'utente all'avvio
     LaunchedEffect(Unit) {
         viewModel.loadUserData(userId)
+    }
+
+    val requiredPermissions = remember {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            listOf(Manifest.permission.CAMERA)
+        } else {
+            listOf(
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        }
+    }
+
+    val permissionHandler = rememberMultiplePermissions(requiredPermissions) { statuses ->
+        // Gestisci il risultato dei permessi qui se necessario
     }
 
     val user by viewModel.userData.collectAsStateWithLifecycle()
@@ -188,13 +209,48 @@ private fun EditProfileView(
     onCancel: () -> Unit
 ) {
     val ctx = LocalContext.current
+    var showPermissionDialog by remember { mutableStateOf(false) }
     var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
     val cameraLauncher = rememberCameraLauncher(
-        //onPictureTaken = { imageUri -> saveImageToStorage(imageUri, ctx.contentResolver)
         onPictureTaken = { uri ->
             capturedImageUri = uri
             onImageSelected(uri)
         })
+
+    val permissionHandler = rememberMultiplePermissions(
+        listOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    ) { statuses ->
+        if (statuses.all { it.value.isGranted }) {
+            cameraLauncher.captureImage()
+        } else {
+            showPermissionDialog = true
+        }
+    }
+
+    if (showPermissionDialog) {
+        AlertDialog(
+            onDismissRequest = { showPermissionDialog = false },
+            title = { Text("Permessi necessari") },
+            text = { Text("Per salvare la foto del profilo sono necessari i permessi di fotocamera e archiviazione") },
+            confirmButton = {
+                Button(onClick = {
+                    showPermissionDialog = false
+                    if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                        permissionHandler.launchPermissionRequest()
+                    }
+                }) {
+                    Text("Richiedi permessi")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showPermissionDialog = false }) {
+                    Text("Annulla")
+                }
+            }
+        )
+    }
+
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         // Selezione immagine
         Box(contentAlignment = Alignment.Center) {
@@ -204,7 +260,14 @@ private fun EditProfileView(
             )
 
             IconButton(
-                onClick = cameraLauncher::captureImage,
+                //onClick = cameraLauncher::captureImage,
+                onClick = {
+                    if (permissionHandler.statuses.all { it.value.isGranted }) {
+                        cameraLauncher.captureImage()
+                    } else {
+                        permissionHandler.launchPermissionRequest()
+                    }
+                },
                 modifier = Modifier.align(Alignment.BottomEnd)
             ) {
                 Icon(Icons.Default.Edit, contentDescription = "Take a Picture")
