@@ -3,7 +3,8 @@ package com.example.quizapp.ui.screens.profile
 import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +22,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -36,7 +38,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,7 +60,6 @@ import com.example.quizapp.ui.composables.AppBar
 import com.example.quizapp.utils.PermissionStatus
 import com.example.quizapp.utils.rememberCameraLauncher
 import com.example.quizapp.utils.rememberMultiplePermissions
-import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileScreen(
@@ -200,6 +200,15 @@ private fun EditProfileView(
     var showPermissionDialog by remember { mutableStateOf(false) }
     var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
 
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri: Uri? ->
+            if (uri != null) {
+                onImageSelected(uri)
+            }
+        }
+    )
+
     val cameraLauncher = rememberCameraLauncher(
         onPictureTaken = { uri ->
             capturedImageUri = uri
@@ -268,6 +277,10 @@ private fun EditProfileView(
                 modifier = Modifier.align(Alignment.BottomEnd)
             ) {
                 Icon(Icons.Default.Edit, contentDescription = "Take a Picture")
+            }
+            // Pulsante galleria
+            IconButton(onClick = { galleryLauncher.launch("image/*") }) {
+                Icon(Icons.Default.Image, contentDescription = "Select from Gallery")
             }
             if (cameraLauncher.capturedImageUri.path?.isNotEmpty() == true) {
                 AsyncImage(

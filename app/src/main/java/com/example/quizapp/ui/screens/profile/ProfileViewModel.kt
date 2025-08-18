@@ -29,12 +29,12 @@ class ProfileViewModel(
             _userData.value = quizRepository.getPersonById(userId)
 
             // Carica i punteggi dell'utente con i dettagli dei quiz
-//            val scores = quizRepository.getScoresByPerson(userId)
-//            val quizzesWithScores = scores.mapNotNull { score ->
-//                val quiz = quizRepository.getQuiz(score.quizId)
-//                quiz.let { Pair(it, score) }
-//            }
-            //_userScores.value = quizzesWithScores
+            val scores = quizRepository.getScoresForPerson(userId)
+            val quizzesWithScores = scores.map { score ->
+                val quiz = quizRepository.getQuiz(score.quizId)
+                Pair(quiz, score)
+            }
+            _userScores.value = quizzesWithScores
         }
     }
 
