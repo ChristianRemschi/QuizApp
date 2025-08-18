@@ -36,6 +36,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,8 +56,10 @@ import com.example.quizapp.data.database.Quiz
 import com.example.quizapp.data.database.Score
 import com.example.quizapp.ui.QuizRoute
 import com.example.quizapp.ui.composables.AppBar
+import com.example.quizapp.utils.PermissionStatus
 import com.example.quizapp.utils.rememberCameraLauncher
 import com.example.quizapp.utils.rememberMultiplePermissions
+import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileScreen(
@@ -67,21 +70,6 @@ fun ProfileScreen(
     // Carica i dati dell'utente all'avvio
     LaunchedEffect(Unit) {
         viewModel.loadUserData(userId)
-    }
-
-    val requiredPermissions = remember {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            listOf(Manifest.permission.CAMERA)
-        } else {
-            listOf(
-                Manifest.permission.CAMERA,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-        }
-    }
-
-    val permissionHandler = rememberMultiplePermissions(requiredPermissions) { statuses ->
-        // Gestisci il risultato dei permessi qui se necessario
     }
 
     val user by viewModel.userData.collectAsStateWithLifecycle()
@@ -211,6 +199,7 @@ private fun EditProfileView(
     val ctx = LocalContext.current
     var showPermissionDialog by remember { mutableStateOf(false) }
     var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
+
     val cameraLauncher = rememberCameraLauncher(
         onPictureTaken = { uri ->
             capturedImageUri = uri
@@ -220,12 +209,19 @@ private fun EditProfileView(
     val permissionHandler = rememberMultiplePermissions(
         listOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
     ) { statuses ->
-        if (statuses.all { it.value.isGranted }) {
-            cameraLauncher.captureImage()
-        } else {
-            showPermissionDialog = true
+        when {
+            statuses.any { it.value == PermissionStatus.Granted } -> { cameraLauncher.captureImage() }
+            statuses.all { it.value == PermissionStatus.PermanentlyDenied } -> showPermissionDialog = true
         }
     }
+
+//    fun getCurrentCamera() = rememberCoroutineScope().launch {
+//        if (permissionHandler.statuses.none { it.value.isGranted }) {
+//            permissionHandler.launchPermissionRequest()
+//            return@launch
+//        }
+//    }
+
 
     if (showPermissionDialog) {
         AlertDialog(
@@ -262,7 +258,8 @@ private fun EditProfileView(
             IconButton(
                 //onClick = cameraLauncher::captureImage,
                 onClick = {
-                    if (permissionHandler.statuses.all { it.value.isGranted }) {
+                    //if (permissionHandler.statuses.all { it.value.isGranted })
+                    if (true) { //TO DO forse permessi
                         cameraLauncher.captureImage()
                     } else {
                         permissionHandler.launchPermissionRequest()
