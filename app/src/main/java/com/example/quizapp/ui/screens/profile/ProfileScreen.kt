@@ -24,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,6 +46,7 @@ import com.example.quizapp.R
 import com.example.quizapp.data.database.Quiz
 import com.example.quizapp.data.database.Score
 import com.example.quizapp.ui.QuizRoute
+import com.example.quizapp.ui.composables.AppBar
 
 @Composable
 fun ProfileScreen(
@@ -64,44 +66,48 @@ fun ProfileScreen(
     var editedName by remember { mutableStateOf(user?.name ?: "") }
     var editedBio by remember { mutableStateOf(user?.biography ?: "") }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        if (isEditing) {
-            // Modalità modifica
-            EditProfileView(
-                name = editedName,
-                onNameChange = { editedName = it },
-                bio = editedBio,
-                onBioChange = { editedBio = it },
-                currentPhoto = user?.photo,
-                selectedImageUri = selectedImageUri,
-                onImageSelected = { uri -> selectedImageUri = uri },
-                onSave = {
-                    viewModel.updateProfile(
-                        editedName,
-                        editedBio,
-                        selectedImageUri?.toString() ?: user?.photo
-                    )
-                    isEditing = false
-                },
-                onCancel = { isEditing = false }
-            )
-        } else {
-            // Visualizzazione normale
-            ViewProfileView(
-                name = user?.name ?: "",
-                bio = user?.biography,
-                photoUri = user?.photo,
-                scores = scores,
-                onEditClick = { isEditing = true },
-                onQuizClick = { quizId ->
-                    navController.navigate(QuizRoute.QuizDetails(quizId))
-                }
-            )
+    Scaffold(
+        topBar = { AppBar(navController, title = "Profile") }
+    ) { contentPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding)
+                .padding(16.dp)
+        ) {
+            if (isEditing) {
+                // Modalità modifica
+                EditProfileView(
+                    name = editedName,
+                    onNameChange = { editedName = it },
+                    bio = editedBio,
+                    onBioChange = { editedBio = it },
+                    currentPhoto = user?.photo,
+                    selectedImageUri = selectedImageUri,
+                    onImageSelected = { uri -> selectedImageUri = uri },
+                    onSave = {
+                        viewModel.updateProfile(
+                            editedName,
+                            editedBio,
+                            selectedImageUri?.toString() ?: user?.photo
+                        )
+                        isEditing = false
+                    },
+                    onCancel = { isEditing = false }
+                )
+            } else {
+                // Visualizzazione normale
+                ViewProfileView(
+                    name = user?.name ?: "",
+                    bio = user?.biography,
+                    photoUri = user?.photo,
+                    scores = scores,
+                    onEditClick = { isEditing = true },
+                    onQuizClick = { quizId ->
+                        navController.navigate(QuizRoute.QuizDetails(quizId))
+                    }
+                )
+            }
         }
     }
 }
