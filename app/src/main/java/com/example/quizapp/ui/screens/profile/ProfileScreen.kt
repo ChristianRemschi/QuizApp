@@ -105,7 +105,8 @@ fun ProfileScreen(
                     onEditClick = { isEditing = true },
                     onQuizClick = { quizId ->
                         navController.navigate(QuizRoute.QuizDetails(quizId))
-                    }
+                    },
+                    onLogoutClick = { viewModel.logout() }
                 )
             }
         }
@@ -119,7 +120,8 @@ private fun ViewProfileView(
     photoUri: String?,
     scores: List<Pair<Quiz, Score>>,
     onEditClick: () -> Unit,
-    onQuizClick: (Int) -> Unit
+    onQuizClick: (Int) -> Unit,
+    onLogoutClick: () -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Row(
@@ -136,7 +138,7 @@ private fun ViewProfileView(
             Column {
                 Text(text = name, style = MaterialTheme.typography.headlineMedium)
                 Button(onClick = onEditClick) {
-                    Text("Modifica Profilo")
+                    Text("Edit Profile")
                 }
             }
         }
@@ -151,7 +153,7 @@ private fun ViewProfileView(
 
         // Punteggi
         Text(
-            text = "I tuoi punteggi:",
+            text = "Your Scores:",
             style = MaterialTheme.typography.headlineSmall
         )
 
@@ -163,6 +165,9 @@ private fun ViewProfileView(
                     QuizScoreItem(quiz, score, onQuizClick)
                 }
             }
+        }
+        Button(onClick = onLogoutClick){
+            Text("Logout")
         }
     }
 }

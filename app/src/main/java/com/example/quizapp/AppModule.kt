@@ -52,6 +52,6 @@ val appModule = module {
 
     viewModel { PlayViewModel(get<QuizDatabase>().QuizDAO()) }
 
-    viewModel { ProfileViewModel( get() ) }
+    viewModel { ProfileViewModel( get() , authStateManager = get()) }
 }
 

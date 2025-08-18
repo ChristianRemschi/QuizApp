@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.quizapp.data.database.Person
 import com.example.quizapp.data.database.Quiz
 import com.example.quizapp.data.database.Score
+import com.example.quizapp.data.repositories.AuthStateManager
 import com.example.quizapp.data.repositories.QuizRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +14,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
-    private val quizRepository: QuizRepository
+    private val quizRepository: QuizRepository,
+    private val authStateManager: AuthStateManager
 ) : ViewModel() {
     private val _userData = MutableStateFlow<Person?>(null)
     val userData: StateFlow<Person?> = _userData.asStateFlow()
@@ -46,6 +48,11 @@ class ProfileViewModel(
             )
             quizRepository.updatePerson(updatedUser)
             _userData.value = updatedUser
+        }
+    }
+    fun logout() {
+        viewModelScope.launch {
+            authStateManager.logout()
         }
     }
 }

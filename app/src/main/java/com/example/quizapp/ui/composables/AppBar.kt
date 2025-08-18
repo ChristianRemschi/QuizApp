@@ -41,7 +41,7 @@ fun AppBar(navController: NavController, title: String) {
                     Icon(Icons.Outlined.Search, contentDescription = "Search")
                 }
             }
-            if (title != "Settings" && title != "Profile") {
+            if (title != "Login" && title != "Profile") {
                 IconButton(onClick = { navController.navigate(QuizRoute.Settings) }) {
                     Icon(Icons.Outlined.Person, "Profile")
                 }
