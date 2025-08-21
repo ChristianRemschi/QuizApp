@@ -37,7 +37,7 @@ val appModule = module {
     single { SettingsRepository(get()) }
 
     single {
-        QuizRepository(get<QuizDatabase>().QuizDAO(), androidApplication().contentResolver)
+        QuizRepository(get<QuizDatabase>().QuizDAO())
     }
 
     single {ThemeRepository(get())}

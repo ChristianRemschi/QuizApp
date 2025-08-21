@@ -108,6 +108,103 @@ interface QuizDAO {
         insertAnswer(Answer(answerText = "15", questionId =  questionId2, isCorrect =  true))
         insertAnswer(Answer(answerText = "20", questionId =  questionId2, isCorrect =  false))
 
+        // Quiz 1 - Matematica (continuazione)
+// Domanda 3
+        val questionId3 = insertQuestion(
+            Question(
+                questionText = "Quanto fa 12 ÷ 4?",
+                quizId = quizId1
+            )
+        ).toInt()
+
+        insertAnswer(Answer(answerText = "2", questionId = questionId3, isCorrect = false))
+        insertAnswer(Answer(answerText = "3", questionId = questionId3, isCorrect = true))
+        insertAnswer(Answer(answerText = "4", questionId = questionId3, isCorrect = false))
+
+// Domanda 4
+        val questionId4 = insertQuestion(
+            Question(
+                questionText = "Qual è la radice quadrata di 64?",
+                quizId = quizId1
+            )
+        ).toInt()
+
+        insertAnswer(Answer(answerText = "6", questionId = questionId4, isCorrect = false))
+        insertAnswer(Answer(answerText = "8", questionId = questionId4, isCorrect = true))
+        insertAnswer(Answer(answerText = "10", questionId = questionId4, isCorrect = false))
+
+// Domanda 5
+        val questionId5 = insertQuestion(
+            Question(
+                questionText = "Quanto fa 7²?",
+                quizId = quizId1
+            )
+        ).toInt()
+
+        insertAnswer(Answer(answerText = "14", questionId = questionId5, isCorrect = false))
+        insertAnswer(Answer(answerText = "49", questionId = questionId5, isCorrect = true))
+        insertAnswer(Answer(answerText = "21", questionId = questionId5, isCorrect = false))
+
+// Domanda 6
+        val questionId6 = insertQuestion(
+            Question(
+                questionText = "Qual è il 50% di 100?",
+                quizId = quizId1
+            )
+        ).toInt()
+
+        insertAnswer(Answer(answerText = "25", questionId = questionId6, isCorrect = false))
+        insertAnswer(Answer(answerText = "50", questionId = questionId6, isCorrect = true))
+        insertAnswer(Answer(answerText = "75", questionId = questionId6, isCorrect = false))
+
+// Domanda 7
+        val questionId7 = insertQuestion(
+            Question(
+                questionText = "Quanto fa 9 - 5 + 3?",
+                quizId = quizId1
+            )
+        ).toInt()
+
+        insertAnswer(Answer(answerText = "7", questionId = questionId7, isCorrect = true))
+        insertAnswer(Answer(answerText = "6", questionId = questionId7, isCorrect = false))
+        insertAnswer(Answer(answerText = "8", questionId = questionId7, isCorrect = false))
+
+// Domanda 8
+        val questionId8 = insertQuestion(
+            Question(
+                questionText = "Qual è il risultato di 4 × (3 + 2)?",
+                quizId = quizId1
+            )
+        ).toInt()
+
+        insertAnswer(Answer(answerText = "14", questionId = questionId8, isCorrect = false))
+        insertAnswer(Answer(answerText = "20", questionId = questionId8, isCorrect = true))
+        insertAnswer(Answer(answerText = "24", questionId = questionId8, isCorrect = false))
+
+// Domanda 9
+        val questionId9 = insertQuestion(
+            Question(
+                questionText = "Quanto fa 18 ÷ 3 × 2?",
+                quizId = quizId1
+            )
+        ).toInt()
+
+        insertAnswer(Answer(answerText = "6", questionId = questionId9, isCorrect = false))
+        insertAnswer(Answer(answerText = "12", questionId = questionId9, isCorrect = true))
+        insertAnswer(Answer(answerText = "9", questionId = questionId9, isCorrect = false))
+
+// Domanda 10
+        val questionId10 = insertQuestion(
+            Question(
+                questionText = "Qual è il numero primo tra questi?",
+                quizId = quizId1
+            )
+        ).toInt()
+
+        insertAnswer(Answer(answerText = "15", questionId = questionId10, isCorrect = false))
+        insertAnswer(Answer(answerText = "21", questionId = questionId10, isCorrect = false))
+        insertAnswer(Answer(answerText = "17", questionId = questionId10, isCorrect = true))
+
         // Quiz 2 - Storia
         val quizId2 = insertQuiz(
             Quiz(
@@ -118,16 +215,28 @@ interface QuizDAO {
             )
         ).toInt()
 
-        // Domanda 3
-        val questionId3 = insertQuestion(
+        // Domanda 1
+        val questionId11 = insertQuestion(
             Question(
                 questionText = "Chi fu il primo imperatore romano?",
                 quizId = quizId2
             )
         ).toInt()
 
-        insertAnswer(Answer(answerText = "Giulio Cesare", questionId =  questionId3, isCorrect =  false))
-        insertAnswer(Answer(answerText = "Augusto", questionId =  questionId3, isCorrect =  true))
-        insertAnswer(Answer(answerText = "Nerone", questionId =  questionId3, isCorrect =  false))
+        insertAnswer(Answer(answerText = "Giulio Cesare", questionId =  questionId11, isCorrect =  false))
+        insertAnswer(Answer(answerText = "Augusto", questionId =  questionId11, isCorrect =  true))
+        insertAnswer(Answer(answerText = "Nerone", questionId =  questionId11, isCorrect =  false))
+
+        //Domanda 2
+        val questionId12 = insertQuestion(
+            Question(
+                questionText = "Quando è crollato l'impero romano?",
+                quizId = quizId2
+            )
+        ).toInt()
+
+        insertAnswer(Answer(answerText = "476", questionId = questionId12, isCorrect = true))
+        insertAnswer(Answer(answerText = "465", questionId = questionId12, isCorrect = false))
+        insertAnswer(Answer(answerText = "456", questionId = questionId12, isCorrect = false))
     }
 }

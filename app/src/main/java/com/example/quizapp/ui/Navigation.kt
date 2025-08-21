@@ -45,13 +45,12 @@ fun QuizNavGraph(navController: NavHostController) {
     val quizVm = koinViewModel<QuizViewModel>()
     val quizState by quizVm.state.collectAsStateWithLifecycle()
 
-    quizVm.populateDatabase()
-
     NavHost(
         navController = navController,
         startDestination = QuizRoute.Home
     ) {
         composable<QuizRoute.Home> {
+            quizVm.populateDatabase()
             HomeScreen(quizState, navController)
         }
         composable<QuizRoute.QuizDetails> { backStackEntry ->

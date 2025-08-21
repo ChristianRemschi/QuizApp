@@ -20,4 +20,12 @@ data class QuizWithQuestions(
         entityColumn = "quizId"
     )
     val questions: List<QuestionWithAnswers>
-)
+) {
+    fun getRandomQuestions(limit: Int = 5): List<QuestionWithAnswers> {
+        return if (questions.size <= limit) {
+            questions.shuffled()
+        } else {
+            questions.shuffled().take(limit)
+        }
+    }
+}

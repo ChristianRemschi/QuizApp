@@ -72,6 +72,8 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.ads.mobile.sdk)
     implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
     annotationProcessor(libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit)

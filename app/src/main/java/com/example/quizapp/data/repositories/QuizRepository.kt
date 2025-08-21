@@ -1,15 +1,12 @@
 package com.example.quizapp.data.repositories
 
-import android.content.ContentResolver
 import com.example.quizapp.data.database.Person
 import com.example.quizapp.data.database.Quiz
 import com.example.quizapp.data.database.QuizDAO
-import com.example.quizapp.data.database.Score
 import kotlinx.coroutines.flow.Flow
 
 class QuizRepository(
-    private val dao: QuizDAO,
-    private val contentResolver: ContentResolver
+    private val dao: QuizDAO
 ) {
     val quizzes: Flow<List<Quiz>> = dao.getAll()
 

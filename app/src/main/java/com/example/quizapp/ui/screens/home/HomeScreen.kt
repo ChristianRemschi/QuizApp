@@ -98,7 +98,7 @@ fun NoItemsPlaceholder(modifier: Modifier = Modifier) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier
     ) {
         Icon(
             Icons.Outlined.LocationOn, "Location icon",
