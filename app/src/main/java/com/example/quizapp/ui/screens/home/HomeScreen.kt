@@ -36,7 +36,7 @@ import com.example.quizapp.ui.composables.Size
 @Composable
 fun HomeScreen(state: QuizState, navController: NavController) {
     Scaffold(
-        topBar = { AppBar(navController, title = "Quiz") }
+        topBar = { AppBar(navController, title = "Home") }
     ) { contentPadding ->
 
         if (state.quizzes.isNotEmpty()) {
