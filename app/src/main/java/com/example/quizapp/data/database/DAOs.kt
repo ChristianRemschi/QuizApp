@@ -57,9 +57,9 @@ interface QuizDAO {
         SELECT * FROM Score
         WHERE personId = :personId
         ORDER BY score DESC
-        LIMIT 1
+        LIMIT 3
     """)
-    suspend fun getBestScoreForPerson(personId: Int): Score?
+    suspend fun getBestScoresForPerson(personId: Int): List<Score>
 
     @Delete
     suspend fun deletePerson(person: Person)

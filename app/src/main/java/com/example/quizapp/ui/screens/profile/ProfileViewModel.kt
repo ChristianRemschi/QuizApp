@@ -23,6 +23,9 @@ class ProfileViewModel(
     private val _userScores = MutableStateFlow<List<Pair<Quiz, Score>>>(emptyList())
     val userScores: StateFlow<List<Pair<Quiz, Score>>> = _userScores.asStateFlow()
 
+    private val _topUserScores = MutableStateFlow<List<Pair<Quiz, Score>>>(emptyList())
+    val topUserScores: StateFlow<List<Pair<Quiz, Score>>> = _topUserScores.asStateFlow()
+
     fun loadUserData(userId: Int) {
         viewModelScope.launch {
             // Carica i dati dell'utente
@@ -35,6 +38,17 @@ class ProfileViewModel(
                 Pair(quiz, score)
             }
             _userScores.value = quizzesWithScores
+        }
+    }
+
+    fun getTop3(userId: Int) {
+        viewModelScope.launch {
+            val top3Scores = quizRepository.getBestScoresForPerson(userId)
+            val topQuizzesWithScores = top3Scores.map { topScore ->
+                val topQuiz = quizRepository.getQuiz(topScore.quizId)
+                Pair(topQuiz, topScore)
+            }
+            _topUserScores.value = topQuizzesWithScores
         }
     }
 

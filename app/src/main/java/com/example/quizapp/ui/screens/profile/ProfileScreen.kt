@@ -9,15 +9,18 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -70,10 +73,15 @@ fun ProfileScreen(
     // Carica i dati dell'utente all'avvio
     LaunchedEffect(Unit) {
         viewModel.loadUserData(userId)
+        viewModel.getTop3(userId)
     }
 
     val user by viewModel.userData.collectAsStateWithLifecycle()
     val scores by viewModel.userScores.collectAsStateWithLifecycle()
+    val topScores by viewModel.topUserScores.collectAsStateWithLifecycle()
+
+    val rememberedScores = remember(scores) { scores }
+    val rememberedTopScores = remember(topScores) { topScores }
 
     var isEditing by remember { mutableStateOf(false) }
     var editedName by remember { mutableStateOf(user?.name ?: "") }
@@ -113,7 +121,8 @@ fun ProfileScreen(
                     name = user?.name ?: "",
                     bio = user?.biography,
                     photoUri = user?.photo,
-                    scores = scores,
+                    scores = rememberedScores,
+                    topScores = rememberedTopScores,
                     onEditClick = { isEditing = true },
                     onQuizClick = { quizId ->
                         navController.navigate(QuizRoute.QuizDetails(quizId))
@@ -131,9 +140,80 @@ private fun ViewProfileView(
     bio: String?,
     photoUri: String?,
     scores: List<Pair<Quiz, Score>>,
+    topScores: List<Pair<Quiz, Score>>,
     onEditClick: () -> Unit,
     onQuizClick: (Int) -> Unit,
     onLogoutClick: () -> Unit
+) {
+    val lazyListState = rememberLazyListState()
+
+    LazyColumn(
+        state = lazyListState,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(16.dp)
+    ) {
+        // Header con informazioni profilo
+        item {
+            ProfileHeader(name, photoUri, bio, onEditClick)
+        }
+
+        // Sezione punteggi
+        item {
+            Text(
+                text = "Your Scores:",
+                style = MaterialTheme.typography.headlineSmall
+            )
+        }
+
+        if (scores.isEmpty()) {
+            item {
+                Text("No quiz completed yet!")
+            }
+        } else {
+            items(scores) { (quiz, score) ->
+                QuizScoreItem(quiz, score, onQuizClick)
+            }
+        }
+
+        // Sezione top 3 punteggi
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Top 3:",
+                style = MaterialTheme.typography.headlineSmall
+            )
+        }
+
+        if (topScores.isEmpty()) {
+            item {
+                Text("No quiz completed yet!")
+            }
+        } else {
+            items(topScores) { (quiz, score) ->
+                QuizScoreItem(quiz, score, onQuizClick)
+            }
+        }
+
+        // Pulsante logout
+        item {
+            Spacer(modifier = Modifier.height(24.dp))
+            Button(
+                onClick = onLogoutClick,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Logout")
+            }
+        }
+    }
+}
+
+@Composable
+private fun ProfileHeader(
+    name: String,
+    photoUri: String?,
+    bio: String?,
+    onEditClick: () -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Row(
@@ -141,12 +221,10 @@ private fun ViewProfileView(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            // Foto profilo
             ProfileImage(photoUri, size = 80.dp)
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            // Nome utente e pulsante modifica
             Column {
                 Text(text = name, style = MaterialTheme.typography.headlineMedium)
                 Button(onClick = onEditClick) {
@@ -155,31 +233,11 @@ private fun ViewProfileView(
             }
         }
 
-        // Biografia
         if (!bio.isNullOrBlank()) {
             Text(
                 text = bio,
                 style = MaterialTheme.typography.bodyMedium
             )
-        }
-
-        // Punteggi
-        Text(
-            text = "Your Scores:",
-            style = MaterialTheme.typography.headlineSmall
-        )
-
-        if (scores.isEmpty()) {
-            Text("Nessun quiz completato ancora!")
-        } else {
-            LazyColumn {
-                items(scores) { (quiz, score) ->
-                    QuizScoreItem(quiz, score, onQuizClick)
-                }
-            }
-        }
-        Button(onClick = onLogoutClick){
-            Text("Logout")
         }
     }
 }

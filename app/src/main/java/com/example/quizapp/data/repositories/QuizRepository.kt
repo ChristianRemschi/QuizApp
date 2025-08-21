@@ -4,6 +4,7 @@ import android.content.ContentResolver
 import com.example.quizapp.data.database.Person
 import com.example.quizapp.data.database.Quiz
 import com.example.quizapp.data.database.QuizDAO
+import com.example.quizapp.data.database.Score
 import kotlinx.coroutines.flow.Flow
 
 class QuizRepository(
@@ -31,5 +32,7 @@ class QuizRepository(
     suspend fun getPersonById(id: Int) = dao.getById(id)
 
     suspend fun updatePerson(person: Person) = dao.updatePerson(person)
+
+    suspend fun getBestScoresForPerson(personId: Int) = dao.getBestScoresForPerson(personId)
 
     }

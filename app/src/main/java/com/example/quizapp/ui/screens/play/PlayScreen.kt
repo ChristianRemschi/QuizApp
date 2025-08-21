@@ -28,10 +28,6 @@ import androidx.compose.ui.Alignment
 import androidx.navigation.NavController
 import com.example.quizapp.ui.composables.AppBar
 
-//@Composable
-//fun PlayScreen(quiz: Quiz, navController: NavController){
-//
-//}
 @Composable
 fun PlayScreen(viewModel: PlayViewModel, quizId: Int, userId: Int, navController: NavController) {
     val quizData by viewModel.quizData.observeAsState()
