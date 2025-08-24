@@ -56,6 +56,7 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.quizapp.R
+import com.example.quizapp.data.database.Badge
 import com.example.quizapp.data.database.Quiz
 import com.example.quizapp.data.database.Score
 import com.example.quizapp.ui.QuizRoute
@@ -127,7 +128,8 @@ fun ProfileScreen(
                     onQuizClick = { quizId ->
                         navController.navigate(QuizRoute.QuizDetails(quizId))
                     },
-                    onLogoutClick = { viewModel.logout() }
+                    onLogoutClick = { viewModel.logout() },
+                    viewModel
                 )
             }
         }
@@ -143,9 +145,11 @@ private fun ViewProfileView(
     topScores: List<Pair<Quiz, Score>>,
     onEditClick: () -> Unit,
     onQuizClick: (Int) -> Unit,
-    onLogoutClick: () -> Unit
+    onLogoutClick: () -> Unit,
+    viewModel: ProfileViewModel
 ) {
     val lazyListState = rememberLazyListState()
+    val badges by viewModel.userBadges.collectAsStateWithLifecycle()
 
     LazyColumn(
         state = lazyListState,
@@ -165,6 +169,8 @@ private fun ViewProfileView(
                 style = MaterialTheme.typography.headlineSmall
             )
         }
+
+
 
         if (scores.isEmpty()) {
             item {
@@ -195,6 +201,17 @@ private fun ViewProfileView(
             }
         }
 
+        item {
+            Text("Badges:", style = MaterialTheme.typography.headlineSmall)
+        }
+        if (badges.isEmpty()) {
+            item { Text("No badges earned yet!") }
+        } else {
+            items(badges) { badge ->
+                BadgeItem(badge)
+            }
+        }
+
         // Pulsante logout
         item {
             Spacer(modifier = Modifier.height(24.dp))
@@ -205,6 +222,7 @@ private fun ViewProfileView(
                 Text("Logout")
             }
         }
+
     }
 }
 
@@ -447,6 +465,24 @@ private fun QuizScoreItem(
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun BadgeItem(badge: Badge) {
+    Row(modifier = Modifier.padding(8.dp)) {
+        if (!badge.iconUri.isNullOrBlank()) {
+            AsyncImage(
+                model = badge.iconUri,
+                contentDescription = badge.name,
+                modifier = Modifier.size(40.dp)
+            )
+        }
+        Spacer(modifier = Modifier.width(8.dp))
+        Column {
+            Text(badge.name, style = MaterialTheme.typography.titleMedium)
+            Text(badge.description, style = MaterialTheme.typography.bodySmall)
         }
     }
 }

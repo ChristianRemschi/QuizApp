@@ -1,6 +1,9 @@
 package com.example.quizapp.data.repositories
 
+import android.util.Log
+import com.example.quizapp.data.database.Badge
 import com.example.quizapp.data.database.Person
+import com.example.quizapp.data.database.PersonBadge
 import com.example.quizapp.data.database.Quiz
 import com.example.quizapp.data.database.QuizDAO
 import kotlinx.coroutines.flow.Flow
@@ -31,5 +34,22 @@ class QuizRepository(
     suspend fun updatePerson(person: Person) = dao.updatePerson(person)
 
     suspend fun getBestScoresForPerson(personId: Int) = dao.getBestScoresForPerson(personId)
+
+    suspend fun getBadgesForPerson(personId: Int) = dao.getBadgesForPerson(personId)
+
+    suspend fun assignBadge(personId: Int, badgeName: String, description: String, iconUri: String? = null) {
+        val person = dao.getPersonById(personId)
+        if (person == null) {
+            Log.e("BADGE", "Person $personId non trovato!")
+            return
+        }
+
+        var badge = dao.getBadgeByName(badgeName)
+        if (badge == null) {
+            val badgeId = dao.insertBadge(Badge(name = badgeName, description = description, iconUri = iconUri))
+            badge = Badge(id = badgeId.toInt(), name = badgeName, description = description, iconUri = iconUri)
+        }
+        dao.insertPersonBadge(PersonBadge(personId = personId, badgeId = badge.id))
+    }
 
     }

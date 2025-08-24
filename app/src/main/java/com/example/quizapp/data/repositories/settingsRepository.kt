@@ -4,6 +4,9 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.example.quizapp.data.database.Badge
+import com.example.quizapp.data.database.PersonBadge
+import com.example.quizapp.data.database.QuizDAO
 import kotlinx.coroutines.flow.map
 
 class SettingsRepository(
@@ -19,6 +22,7 @@ class SettingsRepository(
 
     suspend fun setUsername(username: String) = dataStore.edit { it[USERNAME_KEY] = username }
     suspend fun setPassword(password: String) = dataStore.edit { it[PASSWORD_KEY] = password }
+
 
 
 }

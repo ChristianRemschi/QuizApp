@@ -1,5 +1,6 @@
 package com.example.quizapp.ui.screens.play
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -133,6 +134,10 @@ fun PlayScreen(viewModel: PlayViewModel, quizId: Int, userId: Int, navController
                                         showResult = true
                                         score = calculateScore(selectedAnswers, randomQuestions)
                                         viewModel.insertScore(userId, quizId, score)
+                                        if (score == randomQuestions.size) {
+
+                                            viewModel.assignBadge(userId, "Perfect Score", "Hai risposto correttamente a tutte le domande!", iconUri = "android.resource://com.example.quizapp/drawable/ic_badge_star")
+                                        }
                                     },
                                     enabled = !showResult && selectedAnswers.size == randomQuestions.size
                                 ) {

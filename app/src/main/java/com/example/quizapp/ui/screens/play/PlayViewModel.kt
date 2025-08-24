@@ -9,8 +9,9 @@ import kotlinx.coroutines.launch
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.quizapp.data.database.Score
+import com.example.quizapp.data.repositories.QuizRepository
 
-class PlayViewModel(private val quizDao: QuizDAO) : ViewModel() {
+class PlayViewModel(private val quizDao: QuizDAO, private val quizRepository: QuizRepository) : ViewModel() {
 
     private val _quizData = MutableLiveData<QuizWithQuestions>()
     val quizData: LiveData<QuizWithQuestions> get() = _quizData
@@ -29,6 +30,11 @@ class PlayViewModel(private val quizDao: QuizDAO) : ViewModel() {
                 score = score
             )
             quizDao.insertScore(newScore)
+        }
+    }
+    fun assignBadge(userId: Int, badgeName: String, description: String, iconUri: String? = null) {
+        viewModelScope.launch {
+            quizRepository.assignBadge(userId, badgeName, description, iconUri)
         }
     }
 }

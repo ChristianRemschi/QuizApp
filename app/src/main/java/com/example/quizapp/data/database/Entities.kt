@@ -112,3 +112,34 @@ data class Score(
     @ColumnInfo
     val score: Int
 )
+
+@Entity
+data class Badge(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val name: String,
+    val description: String,
+    val iconUri: String? = null
+)
+
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = Person::class,
+            parentColumns = ["id"],
+            childColumns = ["personId"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = Badge::class,
+            parentColumns = ["id"],
+            childColumns = ["badgeId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
+data class PersonBadge(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val personId: Int,
+    val badgeId: Int,
+    val dateEarned: Long = System.currentTimeMillis()
+)

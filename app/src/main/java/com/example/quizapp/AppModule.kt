@@ -50,7 +50,7 @@ val appModule = module {
 
     viewModel { ThemeViewModel(get()) }
 
-    viewModel { PlayViewModel(get<QuizDatabase>().QuizDAO()) }
+    viewModel { PlayViewModel(get<QuizDatabase>().QuizDAO(),QuizRepository(get<QuizDatabase>().QuizDAO())) }
 
     viewModel { ProfileViewModel( get() , authStateManager = get()) }
 }

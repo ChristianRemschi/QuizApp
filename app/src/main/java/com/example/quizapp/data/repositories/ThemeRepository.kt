@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.example.quizapp.data.database.QuizDAO
 import com.example.quizapp.data.models.Theme
 import kotlinx.coroutines.flow.map
 
@@ -24,4 +25,5 @@ class ThemeRepository(private val dataStore: DataStore<Preferences>) {
     suspend fun setTheme(theme: Theme) = dataStore.edit { preferences ->
         preferences[THEME_KEY] = theme.toString()
     }
+
 }

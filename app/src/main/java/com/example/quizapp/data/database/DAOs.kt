@@ -3,6 +3,7 @@ package com.example.quizapp.data.database
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
@@ -70,6 +71,21 @@ interface QuizDAO {
     @Transaction
     @Query("SELECT * FROM Quiz WHERE id = :quizId")
     suspend fun getQuizWithQuestionsAndAnswers(quizId: Int): QuizWithQuestions
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertBadge(badge: Badge): Long
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertPersonBadge(personBadge: PersonBadge)
+
+    @Query("SELECT b.* FROM Badge b INNER JOIN PersonBadge pb ON b.id = pb.badgeId WHERE pb.personId = :personId")
+    suspend fun getBadgesForPerson(personId: Int): List<Badge>
+
+    @Query("SELECT * FROM Badge WHERE name = :name LIMIT 1")
+    suspend fun getBadgeByName(name: String): Badge?
+
+    @Query("SELECT * FROM Person WHERE id = :personId LIMIT 1")
+    suspend fun getPersonById(personId: Int): Person?
 
     @Transaction
     suspend fun populateSampleData() {

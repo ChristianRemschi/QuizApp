@@ -3,6 +3,7 @@ package com.example.quizapp.ui.screens.profile
 import androidx.collection.emptyIntList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.quizapp.data.database.Badge
 import com.example.quizapp.data.database.Person
 import com.example.quizapp.data.database.Quiz
 import com.example.quizapp.data.database.Score
@@ -38,6 +39,7 @@ class ProfileViewModel(
                 Pair(quiz, score)
             }
             _userScores.value = quizzesWithScores
+            loadUserBadges(userId)
         }
     }
 
@@ -67,6 +69,15 @@ class ProfileViewModel(
     fun logout() {
         viewModelScope.launch {
             authStateManager.logout()
+        }
+    }
+
+    private val _userBadges = MutableStateFlow<List<Badge>>(emptyList())
+    val userBadges: StateFlow<List<Badge>> = _userBadges
+
+    private fun loadUserBadges(userId: Int) {
+        viewModelScope.launch {
+            _userBadges.value = quizRepository.getBadgesForPerson(userId)
         }
     }
 }
