@@ -134,9 +134,37 @@ fun PlayScreen(viewModel: PlayViewModel, quizId: Int, userId: Int, navController
                                         showResult = true
                                         score = calculateScore(selectedAnswers, randomQuestions)
                                         viewModel.insertScore(userId, quizId, score)
+                                        // Badge: Tutto corretto
                                         if (score == randomQuestions.size) {
-
                                             viewModel.assignBadge(userId, "Perfect Score", "Hai risposto correttamente a tutte le domande!", iconUri = "android.resource://com.example.quizapp/drawable/ic_badge_star")
+
+                                        }
+                                        // Badge: Completato (anche se non tutto giusto)
+                                        viewModel.assignBadge(
+                                            userId,
+                                            "Quiz Finisher",
+                                            "Hai completato il quiz fino alla fine!",
+                                            iconUri = "android.resource://com.example.quizapp/drawable/ic_badge_finish"
+                                        )
+
+                                        // Badge: Punteggio minimo
+                                        if (score == 0) {
+                                            viewModel.assignBadge(
+                                                userId,
+                                                "Oops!",
+                                                "Non hai risposto correttamente a nessuna domanda 😅",
+                                                iconUri = "android.resource://com.example.quizapp/drawable/ic_badge_fail"
+                                            )
+                                        }
+
+                                        // Badge: 80% corretto
+                                        if (score >= (randomQuestions.size * 0.8)) {
+                                            viewModel.assignBadge(
+                                                userId,
+                                                "Great Job",
+                                                "Hai superato l'80% di risposte corrette!",
+                                                iconUri = "android.resource://com.example.quizapp/drawable/ic_badge_great"
+                                            )
                                         }
                                     },
                                     enabled = !showResult && selectedAnswers.size == randomQuestions.size

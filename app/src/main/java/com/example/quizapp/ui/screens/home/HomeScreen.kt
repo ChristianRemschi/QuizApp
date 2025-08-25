@@ -21,6 +21,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -34,20 +36,34 @@ import com.example.quizapp.ui.composables.ImageWithPlaceholder
 import com.example.quizapp.ui.composables.Size
 
 @Composable
-fun HomeScreen(state: QuizState, navController: NavController) {
-    Scaffold(
-        topBar = { AppBar(navController, title = "Home") }
-    ) { contentPadding ->
+fun HomeScreen(
+    state: QuizState,
+    navController: NavController,
+    homeViewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
+    val searchQuery by homeViewModel.searchQuery.collectAsState()
 
-        if (state.quizzes.isNotEmpty()) {
+    val filteredQuizzes = if (searchQuery.isBlank()) {
+        state.quizzes
+    } else {
+        state.quizzes.filter { quiz ->
+            quiz.name.contains(searchQuery, ignoreCase = true) ||
+                    quiz.description.contains(searchQuery, ignoreCase = true)
+        }
+    }
+
+    Scaffold(
+        topBar = { AppBar(navController, title = "Home", homeViewModel = homeViewModel) }
+    ) { contentPadding ->
+        if (filteredQuizzes.isNotEmpty()) {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = PaddingValues(8.dp, 8.dp, 8.dp, 80.dp),
-                modifier =  Modifier.padding(contentPadding)
+                modifier = Modifier.padding(contentPadding)
             ) {
-                items(state.quizzes) { item ->
+                items(filteredQuizzes) { item ->
                     QuizItem(
                         item,
                         onClick = { navController.navigate(QuizRoute.QuizDetails(item.id.toInt())) }
@@ -59,6 +75,7 @@ fun HomeScreen(state: QuizState, navController: NavController) {
         }
     }
 }
+
 
 @Composable
 fun QuizItem(item: Quiz, onClick: () -> Unit) {
