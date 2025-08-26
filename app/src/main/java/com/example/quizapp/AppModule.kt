@@ -14,6 +14,7 @@ import com.example.quizapp.ui.QuizViewModel
 import com.example.quizapp.ui.screens.play.PlayViewModel
 import com.example.quizapp.ui.screens.profile.ProfileViewModel
 import com.example.quizapp.ui.screens.settings.SettingsViewModel
+import com.example.quizapp.ui.screens.stats.StatsViewModel
 import com.example.quizapp.ui.screens.theme.ThemeViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.module.dsl.viewModel
@@ -53,5 +54,7 @@ val appModule = module {
     viewModel { PlayViewModel(get<QuizDatabase>().QuizDAO(),QuizRepository(get<QuizDatabase>().QuizDAO())) }
 
     viewModel { ProfileViewModel( get() , authStateManager = get()) }
+
+    viewModel { StatsViewModel( QuizRepository(get<QuizDatabase>().QuizDAO())) }
 }
 

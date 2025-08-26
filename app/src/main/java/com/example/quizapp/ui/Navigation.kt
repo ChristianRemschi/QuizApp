@@ -19,6 +19,8 @@ import com.example.quizapp.ui.screens.profile.ProfileViewModel
 import com.example.quizapp.ui.screens.settings.SettingsScreen
 import com.example.quizapp.ui.screens.settings.SettingsViewModel
 import com.example.quizapp.ui.screens.quizdetails.QuizDetailsScreen
+import com.example.quizapp.ui.screens.stats.StatsScreen
+import com.example.quizapp.ui.screens.stats.StatsViewModel
 import com.example.quizapp.ui.screens.theme.ThemeScreen
 import com.example.quizapp.ui.screens.theme.ThemeViewModel
 import io.ktor.http.parametersOf
@@ -33,6 +35,7 @@ sealed interface QuizRoute {
     @Serializable data object Settings : QuizRoute
     @Serializable data object Theme : QuizRoute
     @Serializable data class Play(val quizId: Int) : QuizRoute
+    @Serializable data class Stats(val userId: Int) : QuizRoute
 }
 
 @Composable
@@ -89,6 +92,15 @@ fun QuizNavGraph(navController: NavHostController) {
             val playViewModel = koinViewModel<PlayViewModel>()
 
             PlayScreen(playViewModel,route.quizId, userId!!, navController)
+
+        }
+
+        composable<QuizRoute.Stats> { backStackEntry ->
+            val route = backStackEntry.toRoute<QuizRoute.Stats>()
+
+            val statsViewModel = koinViewModel<StatsViewModel>()
+
+            StatsScreen(statsViewModel, route.userId, navController)
 
         }
 

@@ -129,7 +129,9 @@ fun ProfileScreen(
                         navController.navigate(QuizRoute.QuizDetails(quizId))
                     },
                     onLogoutClick = { viewModel.logout() },
-                    viewModel
+                    viewModel,
+                    navController,
+                    userId
                 )
             }
         }
@@ -146,7 +148,9 @@ private fun ViewProfileView(
     onEditClick: () -> Unit,
     onQuizClick: (Int) -> Unit,
     onLogoutClick: () -> Unit,
-    viewModel: ProfileViewModel
+    viewModel: ProfileViewModel,
+    navController: NavHostController,
+    userId: Int
 ) {
     val lazyListState = rememberLazyListState()
     val badges by viewModel.userBadges.collectAsStateWithLifecycle()
@@ -209,6 +213,14 @@ private fun ViewProfileView(
         } else {
             items(badges) { badge ->
                 BadgeItem(badge)
+            }
+        }
+
+        item {
+            Button(
+                onClick = { navController.navigate(QuizRoute.Stats(userId)) }
+            ) {
+                Text("Stats")
             }
         }
 
