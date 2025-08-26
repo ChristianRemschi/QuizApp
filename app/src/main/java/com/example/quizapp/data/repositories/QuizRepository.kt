@@ -43,6 +43,10 @@ class QuizRepository(
             Log.e("BADGE", "Person $personId non trovato!")
             return
         }
+        if (dao.getBadgesForPerson(personId).contains(dao.getBadgeByName(badgeName))) {
+            Log.e("BADGE_ALREADY_EXISTS", "Person $personId ha già il badge!")
+            return
+        }
 
         var badge = dao.getBadgeByName(badgeName)
         if (badge == null) {
