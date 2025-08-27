@@ -61,9 +61,13 @@ import com.example.quizapp.data.database.Quiz
 import com.example.quizapp.data.database.Score
 import com.example.quizapp.ui.QuizRoute
 import com.example.quizapp.ui.composables.AppBar
+
 import com.example.quizapp.utils.PermissionStatus
 import com.example.quizapp.utils.rememberCameraLauncher
 import com.example.quizapp.utils.rememberMultiplePermissions
+
+
+
 
 @Composable
 fun ProfileScreen(
@@ -498,3 +502,6 @@ fun BadgeItem(badge: Badge) {
         }
     }
 }
+
+
+

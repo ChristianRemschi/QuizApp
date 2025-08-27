@@ -18,6 +18,12 @@ interface QuizDAO {
     @Query("SELECT COUNT(*) FROM Quiz")
     suspend fun getQuizzesCount(): Int
 
+    @Query("SELECT * FROM Quiz WHERE isFavorite = 1")
+    fun getFavorites(): Flow<List<Quiz>>
+
+    @Update
+    suspend fun updateQuiz(quiz: Quiz)
+
     @Upsert
     suspend fun upsert(quiz: Quiz)
 
@@ -94,8 +100,9 @@ interface QuizDAO {
             Quiz(
                 name = "Matematica Base",
                 description = "Quiz per principianti",
-                imageUri = "content://math_quiz.jpg",
-                isComplete = true
+                imageUri = "android.resource://com.example.quizapp/drawable/math_quiz",
+                isComplete = true,
+                isFavorite = false
             )
         ).toInt()
 
@@ -226,8 +233,9 @@ interface QuizDAO {
             Quiz(
                 name = "Storia Antica",
                 description = "Quiz sull'antica Roma",
-                imageUri = null,
-                isComplete = false
+                imageUri = "android.resource://com.example.quizapp/drawable/storia",
+                isComplete = false,
+                isFavorite = false
             )
         ).toInt()
 
@@ -254,5 +262,137 @@ interface QuizDAO {
         insertAnswer(Answer(answerText = "476", questionId = questionId12, isCorrect = true))
         insertAnswer(Answer(answerText = "465", questionId = questionId12, isCorrect = false))
         insertAnswer(Answer(answerText = "456", questionId = questionId12, isCorrect = false))
+
+        val quizId3 = insertQuiz(
+                Quiz(
+                    name = "Geografia",
+                    description = "Capitali e paesi del mondo",
+                    imageUri = "android.resource://com.example.quizapp/drawable/geography_quiz",
+                    isComplete = false,
+                    isFavorite = false
+                )
+                ).toInt()
+
+        val questionId13 = insertQuestion(
+            Question(
+                questionText = "Qual è la capitale della Francia?",
+                quizId = quizId3
+            )
+        ).toInt()
+
+        insertAnswer(Answer(answerText = "Parigi", questionId = questionId13, isCorrect = true))
+        insertAnswer(Answer(answerText = "Lione", questionId = questionId13, isCorrect = false))
+        insertAnswer(Answer(answerText = "Marsiglia", questionId = questionId13, isCorrect = false))
+
+        val q32 = insertQuestion(
+            Question(
+                questionText = "Quale fiume attraversa l'Egitto?", quizId = quizId3)).toInt()
+        insertAnswer(Answer(answerText = "Nilo",questionId = q32, isCorrect = true))
+        insertAnswer(Answer(answerText = "Amazonas", questionId = q32, isCorrect = false))
+        insertAnswer(Answer(answerText = "Danubio", questionId = q32, isCorrect = false))
+
+        val q33 = insertQuestion(Question(questionText = "Quanti stati compongono gli USA?", quizId = quizId3)).toInt()
+        insertAnswer(Answer(answerText ="48", questionId =q33, isCorrect =false))
+        insertAnswer(Answer(answerText ="50", questionId =q33, isCorrect =true))
+        insertAnswer(Answer(answerText ="52", questionId =q33, isCorrect =false))
+
+
+// Quiz 4 - Scienze
+        val quizId4 = insertQuiz(
+            Quiz(
+                name = "Scienze",
+                description = "Quiz di scienze naturali",
+                imageUri = "android.resource://com.example.quizapp/drawable/science_quiz",
+                isComplete = false,
+                isFavorite = false
+            )
+        ).toInt()
+
+        val questionId14 = insertQuestion(
+            Question(
+                questionText = "Qual è il pianeta più vicino al Sole?",
+                quizId = quizId4
+            )
+        ).toInt()
+
+        insertAnswer(Answer(answerText = "Mercurio", questionId = questionId14, isCorrect = true))
+        insertAnswer(Answer(answerText = "Venere", questionId = questionId14, isCorrect = false))
+        insertAnswer(Answer(answerText = "Marte", questionId = questionId14, isCorrect = false))
+
+        val q42 = insertQuestion(Question(questionText = "Qual è la formula chimica dell’acqua?", quizId =quizId4)).toInt()
+        insertAnswer(Answer(answerText ="CO2", questionId =q42, isCorrect =false))
+        insertAnswer(Answer(answerText ="H2O", questionId =q42, isCorrect =true))
+        insertAnswer(Answer(answerText ="O2", questionId =q42, isCorrect =false))
+
+        val q43 = insertQuestion(Question(questionText = "Chi propose la teoria dell’evoluzione?", quizId =quizId4)).toInt()
+        insertAnswer(Answer(answerText ="Einstein", questionId =q43, isCorrect =false))
+        insertAnswer(Answer(answerText ="Darwin", questionId =q43, isCorrect =true))
+        insertAnswer(Answer(answerText ="Newton", questionId =q43, isCorrect =false))
+
+
+// Quiz 5 - Informatica
+        val quizId5 = insertQuiz(
+            Quiz(
+                name = "Informatica",
+                description = "Quiz sul mondo dei computer",
+                imageUri = "content://cs_quiz.jpg",
+                isComplete = false,
+                isFavorite = false
+            )
+        ).toInt()
+
+        val questionId15 = insertQuestion(
+            Question(
+                questionText = "Chi ha inventato il World Wide Web?",
+                quizId = quizId5
+            )
+        ).toInt()
+
+        insertAnswer(Answer(answerText = "Tim Berners-Lee", questionId = questionId15, isCorrect = true))
+        insertAnswer(Answer(answerText = "Bill Gates", questionId = questionId15, isCorrect = false))
+        insertAnswer(Answer(answerText = "Steve Jobs", questionId = questionId15, isCorrect = false))
+
+        val q61 = insertQuestion(Question(questionText ="Chi è considerato il padre del computer?",quizId = quizId5)).toInt()
+        insertAnswer(Answer(answerText ="Charles Babbage", questionId =q61, isCorrect = true))
+        insertAnswer(Answer(answerText ="Alan Turing", questionId =q61, isCorrect =false))
+        insertAnswer(Answer(answerText ="Bill Gates", questionId =q61, isCorrect =false))
+
+        val q62 = insertQuestion(Question(questionText ="Cosa significa HTML?", quizId = quizId5)).toInt()
+        insertAnswer(Answer(answerText ="HyperText Markup Language", questionId =q62, isCorrect = true))
+        insertAnswer(Answer(answerText ="High Tech Modern Language", questionId =q62, isCorrect =false))
+        insertAnswer(Answer(answerText ="Home Tool Machine Language", questionId =q62, isCorrect =false))
+
+        val q63 = insertQuestion(Question(questionText ="Quale azienda ha creato Android?", quizId = quizId5)).toInt()
+        insertAnswer(Answer(answerText ="Apple", questionId =q63, isCorrect =false))
+        insertAnswer(Answer(answerText ="Google", questionId =q63, isCorrect =true))
+        insertAnswer(Answer(answerText ="Microsoft", questionId =q63, isCorrect =false))
+
+
+// Quiz 6 - Sport
+        val quizId6 = insertQuiz(
+            Quiz(
+                name = "Sport",
+                description = "Quiz sullo sport",
+                imageUri = "content://sport_quiz.jpg",
+                isComplete = false,
+                isFavorite = false
+            )
+        ).toInt()
+
+        val questionId16 = insertQuestion(
+            Question(
+                questionText = "Quanti giocatori ha una squadra di calcio in campo?",
+                quizId = quizId6
+            )
+        ).toInt()
+
+        insertAnswer(Answer(answerText = "9", questionId = questionId16, isCorrect = false))
+        insertAnswer(Answer(answerText = "10", questionId = questionId16, isCorrect = false))
+        insertAnswer(Answer(answerText = "11", questionId = questionId16, isCorrect = true))
+
+        val q51 = insertQuestion(Question(questionText ="In che sport si usa la palla ovale?", quizId =quizId6)).toInt()
+        insertAnswer(Answer(answerText ="Rugby", questionId =q51, isCorrect =true))
+        insertAnswer(Answer(answerText ="Calcio", questionId =q51,isCorrect = false))
+        insertAnswer(Answer(answerText ="Basket", questionId =q51, isCorrect =false))
     }
 }

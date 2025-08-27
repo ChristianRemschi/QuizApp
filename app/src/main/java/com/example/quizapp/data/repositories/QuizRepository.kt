@@ -56,4 +56,11 @@ class QuizRepository(
         dao.insertPersonBadge(PersonBadge(personId = personId, badgeId = badge.id))
     }
 
+    val favoriteQuizzes = dao.getFavorites()
+
+    suspend fun toggleFavorite(quiz: Quiz) {
+        val updated = quiz.copy(isFavorite = !quiz.isFavorite)
+        dao.updateQuiz(updated)
+    }
+
     }

@@ -83,4 +83,9 @@ class QuizViewModel(
         }
 
     }
+    fun toggleFavorite(quiz: Quiz) {
+        viewModelScope.launch {
+            repository.toggleFavorite(quiz)
+        }
+    }
 }

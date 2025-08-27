@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.PlayCircle
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.FloatingActionButton
@@ -24,14 +26,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.quizapp.data.database.Quiz
+import com.example.quizapp.data.repositories.QuizRepository
 import com.example.quizapp.ui.QuizRoute
+import com.example.quizapp.ui.QuizViewModel
 import com.example.quizapp.ui.composables.AppBar
 import com.example.quizapp.ui.composables.ImageWithPlaceholder
 import com.example.quizapp.ui.composables.Size
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun QuizDetailsScreen(quiz: Quiz, navController: NavController) {
     val ctx = LocalContext.current
+    val quizVm = koinViewModel<QuizViewModel>()
 
     fun shareDetails() {
         val sendIntent = Intent(Intent.ACTION_SEND).apply {
@@ -49,9 +55,15 @@ fun QuizDetailsScreen(quiz: Quiz, navController: NavController) {
         floatingActionButton = {
             FloatingActionButton(
                 containerColor = MaterialTheme.colorScheme.tertiary,
-                onClick = ::shareDetails
+                onClick = {
+                    quizVm.toggleFavorite(quiz)
+                }
             ) {
-                Icon(Icons.Outlined.Share, "Share Quiz")
+                Icon(
+                    if (quiz.isFavorite) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
+                    contentDescription = "Preferito"
+                )
+
             }
         },
     ) { contentPadding ->

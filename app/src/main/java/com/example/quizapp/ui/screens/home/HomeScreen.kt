@@ -42,14 +42,16 @@ fun HomeScreen(
     homeViewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
     val searchQuery by homeViewModel.searchQuery.collectAsState()
+    val favoritesOnly by homeViewModel.favoritesOnly.collectAsState()
 
-    val filteredQuizzes = if (searchQuery.isBlank()) {
-        state.quizzes
-    } else {
-        state.quizzes.filter { quiz ->
-            quiz.name.contains(searchQuery, ignoreCase = true) ||
-                    quiz.description.contains(searchQuery, ignoreCase = true)
-        }
+    val filteredQuizzes = state.quizzes.filter { quiz ->
+        // 1. Se la ricerca è vuota, passa sempre
+        (searchQuery.isBlank() ||
+                quiz.name.contains(searchQuery, ignoreCase = true) ||
+                quiz.description.contains(searchQuery, ignoreCase = true))
+                &&
+                // 2. Se favoritesOnly è attivo, mostra solo i preferiti
+                (!favoritesOnly || quiz.isFavorite)
     }
 
     Scaffold(

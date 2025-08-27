@@ -19,6 +19,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,6 +29,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.quizapp.data.database.QuestionWithAnswers
 import com.example.quizapp.ui.composables.AppBar
+import kotlinx.coroutines.launch
 
 @Composable
 fun PlayScreen(viewModel: PlayViewModel, quizId: Int, userId: Int, navController: NavController) {
@@ -44,13 +48,16 @@ fun PlayScreen(viewModel: PlayViewModel, quizId: Int, userId: Int, navController
     var showResult by remember { mutableStateOf(false) }
     var score by remember { mutableStateOf(0) }
     val lazyListState = rememberLazyListState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(quizId) {
         viewModel.loadQuiz(quizId)
     }
 
     Scaffold(
-        topBar = { AppBar(navController, title = "Play") }
+        topBar = { AppBar(navController, title = "Play") },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { contentPadding ->
         Box(modifier = Modifier.padding(contentPadding)) {
             when {
@@ -136,6 +143,9 @@ fun PlayScreen(viewModel: PlayViewModel, quizId: Int, userId: Int, navController
                                         // Badge: Tutto corretto
                                         if (score == randomQuestions.size) {
                                             viewModel.assignBadge(userId, "Perfect Score", "Hai risposto correttamente a tutte le domande!", iconUri = "android.resource://com.example.quizapp/drawable/ic_badge_star")
+                                            scope.launch {
+                                                snackbarHostState.showSnackbar("Hai ottenuto il badge: Perfect Score ")
+                                            }
 
                                         }
                                         // Badge: Completato (anche se non tutto giusto)
@@ -145,15 +155,21 @@ fun PlayScreen(viewModel: PlayViewModel, quizId: Int, userId: Int, navController
                                             "Hai completato il quiz fino alla fine!",
                                             iconUri = "android.resource://com.example.quizapp/drawable/ic_badge_finish"
                                         )
+                                        scope.launch {
+                                            snackbarHostState.showSnackbar("Hai ottenuto il badge: Quiz Finisher ")
+                                        }
 
                                         // Badge: Punteggio minimo
                                         if (score == 0) {
                                             viewModel.assignBadge(
                                                 userId,
                                                 "Oops!",
-                                                "Non hai risposto correttamente a nessuna domanda 😅",
+                                                "Non hai risposto correttamente a nessuna domanda ",
                                                 iconUri = "android.resource://com.example.quizapp/drawable/ic_badge_fail"
                                             )
+                                            scope.launch {
+                                                snackbarHostState.showSnackbar("Hai ottenuto il badge: Quiz Fail ")
+                                            }
                                         }
 
                                         // Badge: 80% corretto
@@ -164,6 +180,9 @@ fun PlayScreen(viewModel: PlayViewModel, quizId: Int, userId: Int, navController
                                                 "Hai superato l'80% di risposte corrette!",
                                                 iconUri = "android.resource://com.example.quizapp/drawable/ic_badge_great"
                                             )
+                                            scope.launch {
+                                                snackbarHostState.showSnackbar("Hai ottenuto il badge: Great Job ")
+                                            }
                                         }
                                     },
                                     enabled = !showResult && selectedAnswers.size == randomQuestions.size

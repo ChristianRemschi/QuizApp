@@ -6,6 +6,8 @@ import androidx.compose.material.icons.outlined.Contrast
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -29,6 +31,7 @@ import java.lang.reflect.Modifier
 @Composable
 fun AppBar(navController: NavController, title: String, homeViewModel: HomeViewModel? = null) {
     var showSearch by remember { mutableStateOf(false) }
+    var showFavoritesOnly by remember { mutableStateOf(false) }
 
     CenterAlignedTopAppBar(
         title = {
@@ -58,6 +61,15 @@ fun AppBar(navController: NavController, title: String, homeViewModel: HomeViewM
             if (title == "Home") {
                 IconButton(onClick = { showSearch = !showSearch }) {
                     Icon(Icons.Outlined.Search, contentDescription = "Search")
+                }
+                IconButton(onClick = {
+                    showFavoritesOnly = !showFavoritesOnly
+                    homeViewModel?.setFavoritesFilter(showFavoritesOnly)
+                }) {
+                    Icon(
+                        if (showFavoritesOnly) Icons.Outlined.Star else Icons.Outlined.StarBorder,
+                        contentDescription = "Preferiti"
+                    )
                 }
             }
             if (title != "Login" && title != "Profile") {

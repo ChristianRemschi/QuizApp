@@ -20,7 +20,10 @@ data class Quiz (
     val imageUri: String?,
 
     @ColumnInfo
-    var isComplete: Boolean
+    var isComplete: Boolean,
+
+    @ColumnInfo(defaultValue = "0")
+    var isFavorite: Boolean = false
 )
 
 @Entity(
