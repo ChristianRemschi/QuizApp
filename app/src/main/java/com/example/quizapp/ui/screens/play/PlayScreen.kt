@@ -142,34 +142,34 @@ fun PlayScreen(viewModel: PlayViewModel, quizId: Int, userId: Int, navController
                                         viewModel.insertScore(userId, quizId, score)
                                         // Badge: Tutto corretto
                                         if (score == randomQuestions.size) {
-                                            viewModel.assignBadge(userId, "Perfect Score", "Hai risposto correttamente a tutte le domande!", iconUri = "android.resource://com.example.quizapp/drawable/ic_badge_star")
-                                            scope.launch {
-                                                snackbarHostState.showSnackbar("Hai ottenuto il badge: Perfect Score ")
-                                            }
-
+                                            viewModel.assignBadge(
+                                                userId,
+                                                "Perfect Score",
+                                                "You answered all the questions correctly!",
+                                                iconUri = "android.resource://com.example.quizapp/drawable/ic_badge_star",
+                                                scope,
+                                                snackbarHostState
+                                            )
                                         }
                                         // Badge: Completato (anche se non tutto giusto)
                                         viewModel.assignBadge(
                                             userId,
                                             "Quiz Finisher",
-                                            "Hai completato il quiz fino alla fine!",
-                                            iconUri = "android.resource://com.example.quizapp/drawable/ic_badge_finish"
+                                            "You have completed the quiz to the end!",
+                                            iconUri = "android.resource://com.example.quizapp/drawable/ic_badge_finish",
+                                            scope,
+                                            snackbarHostState
                                         )
-                                        scope.launch {
-                                            snackbarHostState.showSnackbar("Hai ottenuto il badge: Quiz Finisher ")
-                                        }
-
                                         // Badge: Punteggio minimo
                                         if (score == 0) {
                                             viewModel.assignBadge(
                                                 userId,
                                                 "Oops!",
-                                                "Non hai risposto correttamente a nessuna domanda ",
-                                                iconUri = "android.resource://com.example.quizapp/drawable/ic_badge_fail"
+                                                "Oops! You did not answer any question correctly!",
+                                                iconUri = "android.resource://com.example.quizapp/drawable/ic_badge_fail",
+                                                scope,
+                                                snackbarHostState
                                             )
-                                            scope.launch {
-                                                snackbarHostState.showSnackbar("Hai ottenuto il badge: Quiz Fail ")
-                                            }
                                         }
 
                                         // Badge: 80% corretto
@@ -177,17 +177,16 @@ fun PlayScreen(viewModel: PlayViewModel, quizId: Int, userId: Int, navController
                                             viewModel.assignBadge(
                                                 userId,
                                                 "Great Job",
-                                                "Hai superato l'80% di risposte corrette!",
-                                                iconUri = "android.resource://com.example.quizapp/drawable/ic_badge_great"
+                                                "You have exceeded 80% of correct answers!",
+                                                iconUri = "android.resource://com.example.quizapp/drawable/ic_badge_great",
+                                                scope,
+                                                snackbarHostState
                                             )
-                                            scope.launch {
-                                                snackbarHostState.showSnackbar("Hai ottenuto il badge: Great Job ")
-                                            }
                                         }
                                     },
                                     enabled = !showResult && selectedAnswers.size == randomQuestions.size
                                 ) {
-                                    Text("Controlla Risposte")
+                                    Text("Check Answers")
                                 }
 
                                 if (showResult) {

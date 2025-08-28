@@ -1,12 +1,15 @@
 package com.example.quizapp.data.repositories
 
 import android.util.Log
+import androidx.compose.material3.SnackbarHostState
 import com.example.quizapp.data.database.Badge
 import com.example.quizapp.data.database.Person
 import com.example.quizapp.data.database.PersonBadge
 import com.example.quizapp.data.database.Quiz
 import com.example.quizapp.data.database.QuizDAO
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 
 class QuizRepository(
     private val dao: QuizDAO
@@ -37,7 +40,7 @@ class QuizRepository(
 
     suspend fun getBadgesForPerson(personId: Int) = dao.getBadgesForPerson(personId)
 
-    suspend fun assignBadge(personId: Int, badgeName: String, description: String, iconUri: String? = null) {
+    suspend fun assignBadge(personId: Int, badgeName: String, description: String, iconUri: String? = null, scope: CoroutineScope, snackbarHostState: SnackbarHostState) {
         val person = dao.getPersonById(personId)
         if (person == null) {
             Log.e("BADGE", "Person $personId non trovato!")
@@ -54,6 +57,9 @@ class QuizRepository(
             badge = Badge(id = badgeId.toInt(), name = badgeName, description = description, iconUri = iconUri)
         }
         dao.insertPersonBadge(PersonBadge(personId = personId, badgeId = badge.id))
+        scope.launch {
+            snackbarHostState.showSnackbar("You claimed a new badge: $badgeName")
+        }
     }
 
     val favoriteQuizzes = dao.getFavorites()

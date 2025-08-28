@@ -1,5 +1,6 @@
 package com.example.quizapp.ui.screens.play
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quizapp.data.database.QuizDAO
@@ -10,6 +11,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.quizapp.data.database.Score
 import com.example.quizapp.data.repositories.QuizRepository
+import kotlinx.coroutines.CoroutineScope
 
 class PlayViewModel(private val quizDao: QuizDAO, private val quizRepository: QuizRepository) : ViewModel() {
 
@@ -32,9 +34,9 @@ class PlayViewModel(private val quizDao: QuizDAO, private val quizRepository: Qu
             quizDao.insertScore(newScore)
         }
     }
-    fun assignBadge(userId: Int, badgeName: String, description: String, iconUri: String? = null) {
+    fun assignBadge(userId: Int, badgeName: String, description: String, iconUri: String? = null, scope: CoroutineScope, snackbarHostState: SnackbarHostState) {
         viewModelScope.launch {
-            quizRepository.assignBadge(userId, badgeName, description, iconUri)
+            quizRepository.assignBadge(userId, badgeName, description, iconUri, scope, snackbarHostState)
         }
     }
 }

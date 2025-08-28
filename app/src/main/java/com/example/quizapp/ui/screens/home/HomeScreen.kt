@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.LocationOn
+import androidx.compose.material.icons.outlined.Quiz
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -120,19 +121,15 @@ fun NoItemsPlaceholder(modifier: Modifier = Modifier) {
         modifier = modifier
     ) {
         Icon(
-            Icons.Outlined.LocationOn, "Location icon",
+            Icons.Outlined.Quiz, "Quiz icon",
             modifier = Modifier.padding(bottom = 16.dp).size(48.dp),
             tint = MaterialTheme.colorScheme.secondary
         )
         Text(
-            "No items",
+            "No quizzes",
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.secondary,
             modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Text(
-            "Tap the + button to add a new trip.",
-            style = MaterialTheme.typography.bodyLarge
         )
     }
 }
