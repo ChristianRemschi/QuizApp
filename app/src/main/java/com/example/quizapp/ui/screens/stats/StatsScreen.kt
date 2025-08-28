@@ -14,6 +14,17 @@ import androidx.navigation.NavController
 import com.example.quizapp.ui.composables.AppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.style.TextAlign
 
 @Composable
 fun StatsScreen(
@@ -22,90 +33,191 @@ fun StatsScreen(
     navController: NavController
 ) {
     viewModel.loadUserData(userId)
-    val userScores by viewModel.userScores
+    val allUserScores by viewModel.allUserScores
+    val userScoresByQuizType by viewModel.userScoresByQuizType
     val scoreDistribution by viewModel.scoreDistribution
+    val quizTypeStats by viewModel.quizTypeStats
+    val isLoading by viewModel.isLoading
 
     Scaffold(
         topBar = {
             AppBar(navController, title = "Stats")
         }
     ) { padding ->
-        LazyColumn(
-            modifier = Modifier.padding(padding),
-            verticalArrangement = Arrangement.spacedBy(24.dp)
-        ) {
-            item {
-                Text(
-                    text = "Performance Quiz",
-                    style = MaterialTheme.typography.headlineMedium,
-                    modifier = Modifier.padding(16.dp)
-                )
+        if (isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
             }
+        } else {
+            LazyColumn(
+                modifier = Modifier.padding(padding),
+                verticalArrangement = Arrangement.spacedBy(24.dp)
+            ) {
+                // GRAFICO COMPLESSIVO
+                if (allUserScores.isNotEmpty()) {
+                    item {
+                        Card(
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                Text(
+                                    text = "General Performance",
+                                    style = MaterialTheme.typography.headlineSmall,
+                                    modifier = Modifier.padding(bottom = 8.dp)
+                                )
 
-            if (userScores.isNotEmpty()) {
-                item {
-                    BarChartComponent(
-                        data = userScores,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                    )
+                                BarChartComponent(
+                                    data = allUserScores,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(200.dp),
+                                    title = "All Quizzes"
+                                )
+
+                                // Aggiungi statistiche complessive se vuoi
+                                val overallStats = calculateOverallStats(allUserScores)
+                                ScoreStats(
+                                    stats = overallStats,
+                                    modifier = Modifier.padding(top = 8.dp)
+                                )
+                            }
+                        }
+                    }
                 }
-            }
 
-//            item {
-//                Text(
-//                    text = "Distribuzione Punteggi",
-//                    style = MaterialTheme.typography.headlineMedium,
-//                    modifier = Modifier.padding(16.dp)
-//                )
-//            }
+                // GRAFICI PER TIPO DI QUIZ
+                if (userScoresByQuizType.isNotEmpty()) {
+                    item {
+                        Text(
+                            text = "Performance by Quiz Type",
+                            style = MaterialTheme.typography.headlineMedium,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                    }
 
-//            if (scoreDistribution.isNotEmpty()) {
-//                item {
-//                    PieChartComponent(
-//                        data = scoreDistribution,
-//                        modifier = Modifier
-//                            .align(Alignment.CenterHorizontally)
-//                            .padding(16.dp)
-//                    )
-//                }
-//
-//                item {
-//                    Column(modifier = Modifier.padding(16.dp)) {
-//                        scoreDistribution.forEach { (category, count) ->
-//                            Row(
-//                                verticalAlignment = Alignment.CenterVertically,
-//                                modifier = Modifier.padding(4.dp)
-//                            ) {
-//                                Box(
-//                                    modifier = Modifier
-//                                        .size(16.dp)
-//                                        .background(
-//                                            when(category) {
-//                                                "Excellent" -> Color.Green
-//                                                "Good" -> Color.Yellow
-//                                                else -> Color.Red
-//                                            }
-//                                        )
-//                                )
-//                                Spacer(modifier = Modifier.width(8.dp))
-//                                Text("$category: $count quiz")
-//                            }
-//                        }
-//                    }
-//                }
-//            }
+                    userScoresByQuizType.forEach { (quizType, scores) ->
+                        item(key = quizType) {
+                            val stats = quizTypeStats[quizType]
+                            QuizTypeSection(
+                                quizType = quizType,
+                                scores = scores,
+                                stats = stats,
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                            )
+                        }
+                    }
+                }
 
-            if (userScores.isEmpty() && scoreDistribution.isEmpty()) {
-                item {
-                    Text(
-                        text = "No data available",
-                        modifier = Modifier
-                            .padding(32.dp)
-                    )
+                if (allUserScores.isEmpty() && userScoresByQuizType.isEmpty()) {
+                    item {
+                        Card(
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            Text(
+                                text = "No data available",
+                                modifier = Modifier
+                                    .padding(32.dp)
+                                    .fillMaxWidth(),
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
                 }
             }
         }
+    }
+}
+
+// Funzione per calcolare le statistiche complessive
+private fun calculateOverallStats(scores: List<Pair<String, Float>>): QuizTypeStats {
+    val scoreValues = scores.map { it.second }
+    val totalScore = scoreValues.sum().toInt()
+    return QuizTypeStats(
+        quizType = "Overall",
+        totalScore = totalScore,
+        totalAttempts = scores.size,
+        averageScore = scoreValues.average().toFloat(),
+        maxScore = scoreValues.maxOrNull()?.toInt() ?: 0,
+        minScore = scoreValues.minOrNull()?.toInt() ?: 0
+    )
+}
+
+@Composable
+fun QuizTypeSection(
+    quizType: String,
+    scores: List<Pair<String, Float>>,
+    stats: QuizTypeStats?,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = quizType,
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp
+                ),
+                modifier = Modifier.padding(bottom = 8.dp),
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            BarChartComponent(
+                data = scores,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                //title = quizType
+            )
+
+            stats?.let {
+                ScoreStats(stats = it, modifier = Modifier.padding(top = 8.dp))
+            }
+        }
+    }
+}
+
+@Composable
+fun ScoreStats(stats: QuizTypeStats, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceAround
+    ) {
+        StatItem(label = "Tentativi", value = stats.totalAttempts.toString())
+        StatItem(label = "Media", value = "%.1f".format(stats.averageScore))
+        StatItem(label = "Max", value = stats.maxScore.toString())
+        StatItem(label = "Min", value = stats.minScore.toString())
+    }
+}
+
+@Composable
+fun StatItem(
+    label: String,
+    value: String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = value,
+            style = MaterialTheme.typography.titleLarge.copy(
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp
+            ),
+            color = MaterialTheme.colorScheme.primary
+        )
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodySmall.copy(
+                fontSize = 12.sp
+            ),
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+        )
     }
 }
