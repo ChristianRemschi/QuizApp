@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.quizapp.data.database.QuestionWithAnswers
 import com.example.quizapp.ui.composables.AppBar
-import kotlinx.coroutines.launch
 
 @Composable
 fun PlayScreen(viewModel: PlayViewModel, quizId: Int, userId: Int, navController: NavController) {
@@ -46,7 +46,7 @@ fun PlayScreen(viewModel: PlayViewModel, quizId: Int, userId: Int, navController
     val quizData by viewModel.quizData.observeAsState()
     val selectedAnswers = remember { mutableStateMapOf<Int, Int>() }
     var showResult by remember { mutableStateOf(false) }
-    var score by remember { mutableStateOf(0) }
+    var score by remember { mutableIntStateOf(0) }
     val lazyListState = rememberLazyListState()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -62,7 +62,6 @@ fun PlayScreen(viewModel: PlayViewModel, quizId: Int, userId: Int, navController
         Box(modifier = Modifier.padding(contentPadding)) {
             when {
                 quizData == null -> {
-                    // Loading state
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
@@ -77,7 +76,6 @@ fun PlayScreen(viewModel: PlayViewModel, quizId: Int, userId: Int, navController
                 }
 
                 quizData?.questions.isNullOrEmpty() -> {
-                    // No questions state
                     Column(
                         modifier = Modifier
                             .fillMaxSize()

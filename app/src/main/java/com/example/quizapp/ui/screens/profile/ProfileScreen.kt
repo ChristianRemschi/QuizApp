@@ -61,7 +61,6 @@ import com.example.quizapp.data.database.Quiz
 import com.example.quizapp.data.database.Score
 import com.example.quizapp.ui.QuizRoute
 import com.example.quizapp.ui.composables.AppBar
-
 import com.example.quizapp.utils.PermissionStatus
 import com.example.quizapp.utils.rememberCameraLauncher
 import com.example.quizapp.utils.rememberMultiplePermissions
@@ -102,7 +101,6 @@ fun ProfileScreen(
                 .padding(16.dp)
         ) {
             if (isEditing) {
-                // Modalità modifica
                 EditProfileView(
                     name = editedName,
                     onNameChange = { editedName = it },
@@ -165,20 +163,15 @@ private fun ViewProfileView(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp)
     ) {
-        // Header con informazioni profilo
         item {
             ProfileHeader(name, photoUri, bio, onEditClick)
         }
-
-        // Sezione punteggi
         item {
             Text(
                 text = "Your Scores:",
                 style = MaterialTheme.typography.headlineSmall
             )
         }
-
-
 
         if (scores.isEmpty()) {
             item {
@@ -190,7 +183,6 @@ private fun ViewProfileView(
             }
         }
 
-        // Sezione top 3 punteggi
         item {
             Spacer(modifier = Modifier.height(16.dp))
             Text(
@@ -228,7 +220,6 @@ private fun ViewProfileView(
             }
         }
 
-        // Pulsante logout
         item {
             Spacer(modifier = Modifier.height(24.dp))
             Button(
@@ -316,19 +307,11 @@ private fun EditProfileView(
         }
     }
 
-//    fun getCurrentCamera() = rememberCoroutineScope().launch {
-//        if (permissionHandler.statuses.none { it.value.isGranted }) {
-//            permissionHandler.launchPermissionRequest()
-//            return@launch
-//        }
-//    }
-
-
     if (showPermissionDialog) {
         AlertDialog(
             onDismissRequest = { showPermissionDialog = false },
-            title = { Text("Permessi necessari") },
-            text = { Text("Per salvare la foto del profilo sono necessari i permessi di fotocamera e archiviazione") },
+            title = { Text("Permission required") },
+            text = { Text("Camera and storage permissions are required to save your profile photo.") },
             confirmButton = {
                 Button(onClick = {
                     showPermissionDialog = false
@@ -337,19 +320,18 @@ private fun EditProfileView(
                         permissionHandler.launchPermissionRequest()
                     }
                 }) {
-                    Text("Richiedi permessi")
+                    Text("Request permits")
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showPermissionDialog = false }) {
-                    Text("Annulla")
+                    Text("Cancel")
                 }
             }
         )
     }
 
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        // Selezione immagine
         Box(contentAlignment = Alignment.Center) {
             ProfileImage(
                 capturedImageUri?.toString() ?: selectedImageUri?.toString() ?: currentPhoto,
@@ -357,10 +339,8 @@ private fun EditProfileView(
             )
 
             IconButton(
-                //onClick = cameraLauncher::captureImage,
                 onClick = {
-                    //if (permissionHandler.statuses.all { it.value.isGranted })
-                    if (true) { //TODO forse permessi o metti la riga sopra
+                    if (true) { //TODO forse permessi o metti la riga sopra(servono i permessi per la camera?)
                         cameraLauncher.captureImage()
                     } else {
                         permissionHandler.launchPermissionRequest()
@@ -370,7 +350,6 @@ private fun EditProfileView(
             ) {
                 Icon(Icons.Default.Edit, contentDescription = "Take a Picture")
             }
-            // Pulsante galleria
             IconButton(onClick = { galleryLauncher.launch("image/*") }) {
                 Icon(Icons.Default.Image, contentDescription = "Select from Gallery")
             }
@@ -389,7 +368,7 @@ private fun EditProfileView(
         OutlinedTextField(
             value = name,
             onValueChange = onNameChange,
-            label = { Text("Nome") },
+            label = { Text("Name") },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -397,7 +376,7 @@ private fun EditProfileView(
         OutlinedTextField(
             value = bio ?: "",
             onValueChange = onBioChange,
-            label = { Text("Biografia") },
+            label = { Text("Biography") },
             modifier = Modifier.fillMaxWidth(),
             maxLines = 4
         )
@@ -408,13 +387,13 @@ private fun EditProfileView(
             modifier = Modifier.fillMaxWidth()
         ) {
             Button(onClick = onCancel) {
-                Text("Annulla")
+                Text("Cancel")
             }
 
             Spacer(modifier = Modifier.width(8.dp))
 
             Button(onClick = onSave) {
-                Text("Salva")
+                Text("Save")
             }
         }
     }
@@ -458,7 +437,6 @@ private fun QuizScoreItem(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(16.dp)
         ) {
-            // Immagine del quiz (se presente)
             if (!quiz.imageUri.isNullOrBlank()) {
                 AsyncImage(
                     model = quiz.imageUri,
@@ -477,7 +455,7 @@ private fun QuizScoreItem(
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
-                    text = "Punteggio: ${score.score}",
+                    text = "Score: ${score.score}",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }

@@ -31,7 +31,7 @@ class QuizViewModel(
         initialValue = QuizState(emptyList())
     )
 
-    val actions = object : QuizActions {
+    val actions = object : QuizActions { //TODO penso sia inutile
         override fun addQuiz(quiz: Quiz) = viewModelScope.launch {
             repository.upsert(quiz)
         }
@@ -57,7 +57,6 @@ class QuizViewModel(
 
             val existingUser = quizDao.getByUsername(username)
             if (existingUser != null) {
-                // Account già esistente
                 onResult(false)
             } else {
                 val newPerson = Person(
@@ -76,9 +75,9 @@ class QuizViewModel(
             val user = quizDao.getByUsername(username)
             if (user != null && user.password == password) {
                 authStateManager.setLoggedInUser(user.id)
-                onResult(true) // login riuscito
+                onResult(true)
             } else {
-                onResult(false) // login fallito
+                onResult(false)
             }
         }
 

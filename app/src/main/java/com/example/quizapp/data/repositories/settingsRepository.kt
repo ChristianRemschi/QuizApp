@@ -4,9 +4,6 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.example.quizapp.data.database.Badge
-import com.example.quizapp.data.database.PersonBadge
-import com.example.quizapp.data.database.QuizDAO
 import kotlinx.coroutines.flow.map
 
 class SettingsRepository(

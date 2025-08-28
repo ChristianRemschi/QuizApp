@@ -12,7 +12,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.PlayCircle
-import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,7 +25,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.quizapp.data.database.Quiz
-import com.example.quizapp.data.repositories.QuizRepository
 import com.example.quizapp.ui.QuizRoute
 import com.example.quizapp.ui.QuizViewModel
 import com.example.quizapp.ui.composables.AppBar
@@ -39,7 +37,7 @@ fun QuizDetailsScreen(quiz: Quiz, navController: NavController) {
     val ctx = LocalContext.current
     val quizVm = koinViewModel<QuizViewModel>()
 
-    fun shareDetails() {
+    fun shareDetails() { //TODO condividi dettagli? ci serve? ora non la stiamo usando
         val sendIntent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, quiz.name)
@@ -61,7 +59,7 @@ fun QuizDetailsScreen(quiz: Quiz, navController: NavController) {
             ) {
                 Icon(
                     if (quiz.isFavorite) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
-                    contentDescription = "Preferito"
+                    contentDescription = "Favourite"
                 )
 
             }

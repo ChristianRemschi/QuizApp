@@ -44,6 +44,7 @@ fun SettingsScreen(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+
     Scaffold(
         topBar = { AppBar(navController, title = "Login") },
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -56,7 +57,6 @@ fun SettingsScreen(
                 .padding(horizontal = 32.dp)
                 .fillMaxSize()
         ) {
-            // Logo/Header (opzionale)
             Icon(
                 Icons.Default.Lock,
                 contentDescription = "Login",
@@ -65,7 +65,6 @@ fun SettingsScreen(
             )
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Username Field
             OutlinedTextField(
                 value = state.username,
                 onValueChange = onUsernameChanged,
@@ -76,7 +75,6 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Password Field
             OutlinedTextField(
                 value = state.password,
                 onValueChange = onPasswordChanged,
@@ -89,27 +87,26 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Login Button
             Button(
                 onClick = {
                     quizViewModel.login(state.username, state.password) { success ->
                         if (success) {
                             scope.launch {
-                                snackbarHostState.showSnackbar("Login con successo")
+                                snackbarHostState.showSnackbar("Login successfully")
                                 navController.navigate(QuizRoute.Home)
                             }
                         } else {
                             scope.launch {
-                                snackbarHostState.showSnackbar("Username o password errati")
+                                snackbarHostState.showSnackbar("Incorrect username or password")
                             }
                         }
-                    } },
+                    }
+                },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = state.username.isNotBlank() && state.password.isNotBlank()
             ) {
                 Text("Login", style = MaterialTheme.typography.labelLarge)
             }
-            //Register Button
             Spacer(modifier = Modifier.height(16.dp))
             TextButton(onClick = {
                 quizViewModel.createAccount(state.username, state.password) { success ->
@@ -117,11 +114,11 @@ fun SettingsScreen(
                         onUsernameChanged("")
                         onPasswordChanged("")
                         scope.launch {
-                            snackbarHostState.showSnackbar("Account creato con successo")
+                            snackbarHostState.showSnackbar("Account created successfully!")
                         }
                     } else {
                         scope.launch {
-                            snackbarHostState.showSnackbar("Username già esistente")
+                            snackbarHostState.showSnackbar("Username already exists!")
                         }
                     }
                 }

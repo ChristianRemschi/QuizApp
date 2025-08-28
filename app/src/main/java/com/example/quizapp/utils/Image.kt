@@ -24,7 +24,7 @@ fun uriToBitmap(imageUri: Uri, contentResolver: ContentResolver): Bitmap {
     return bitmap
 }
 
-fun saveImageToStorage(
+fun saveImageToStorage(  //TODO forse inutile
     imageUri: Uri,
     contentResolver: ContentResolver,
     name: String = "IMG_${SystemClock.uptimeMillis()}"

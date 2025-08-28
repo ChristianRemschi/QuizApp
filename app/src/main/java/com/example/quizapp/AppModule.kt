@@ -30,7 +30,7 @@ val appModule = module {
             QuizDatabase::class.java,
             "Quiz"
         )
-            .fallbackToDestructiveMigration()
+            .fallbackToDestructiveMigration() //TODO vedere se lasciarlo o meno
             .build()
     }
 

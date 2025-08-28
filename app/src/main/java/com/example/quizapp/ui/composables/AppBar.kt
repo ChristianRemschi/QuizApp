@@ -25,7 +25,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import com.example.quizapp.ui.QuizRoute
 import com.example.quizapp.ui.screens.home.HomeViewModel
-import java.lang.reflect.Modifier
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,7 +42,7 @@ fun AppBar(navController: NavController, title: String, homeViewModel: HomeViewM
                         text = it
                         homeViewModel?.updateSearch(it) // aggiorna lo stato nel VM
                     },
-                    placeholder = { Text("Cerca...") },
+                    placeholder = { Text("Search...") },
                     singleLine = true
                 )
             } else {
@@ -68,7 +67,7 @@ fun AppBar(navController: NavController, title: String, homeViewModel: HomeViewM
                 }) {
                     Icon(
                         if (showFavoritesOnly) Icons.Outlined.Star else Icons.Outlined.StarBorder,
-                        contentDescription = "Preferiti"
+                        contentDescription = "Favourites"
                     )
                 }
             }

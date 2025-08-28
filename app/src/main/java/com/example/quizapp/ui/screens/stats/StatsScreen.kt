@@ -35,7 +35,6 @@ fun StatsScreen(
     viewModel.loadUserData(userId)
     val allUserScores by viewModel.allUserScores
     val userScoresByQuizType by viewModel.userScoresByQuizType
-    val scoreDistribution by viewModel.scoreDistribution
     val quizTypeStats by viewModel.quizTypeStats
     val isLoading by viewModel.isLoading
 
@@ -77,7 +76,6 @@ fun StatsScreen(
                                     title = "All Quizzes"
                                 )
 
-                                // Aggiungi statistiche complessive se vuoi
                                 val overallStats = calculateOverallStats(allUserScores)
                                 ScoreStats(
                                     stats = overallStats,
@@ -88,7 +86,7 @@ fun StatsScreen(
                     }
                 }
 
-                // GRAFICI PER TIPO DI QUIZ
+                // GRAFICI PER QUIZ
                 if (userScoresByQuizType.isNotEmpty()) {
                     item {
                         Text(
@@ -131,7 +129,6 @@ fun StatsScreen(
     }
 }
 
-// Funzione per calcolare le statistiche complessive
 private fun calculateOverallStats(scores: List<Pair<String, Float>>): QuizTypeStats {
     val scoreValues = scores.map { it.second }
     val totalScore = scoreValues.sum().toInt()
@@ -171,7 +168,6 @@ fun QuizTypeSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
-                //title = quizType
             )
 
             stats?.let {
@@ -187,8 +183,8 @@ fun ScoreStats(stats: QuizTypeStats, modifier: Modifier = Modifier) {
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceAround
     ) {
-        StatItem(label = "Tentativi", value = stats.totalAttempts.toString())
-        StatItem(label = "Media", value = "%.1f".format(stats.averageScore))
+        StatItem(label = "Attempts", value = stats.totalAttempts.toString())
+        StatItem(label = "Mean", value = "%.1f".format(stats.averageScore))
         StatItem(label = "Max", value = stats.maxScore.toString())
         StatItem(label = "Min", value = stats.minScore.toString())
     }

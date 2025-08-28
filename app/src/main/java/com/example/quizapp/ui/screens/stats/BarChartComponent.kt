@@ -49,7 +49,6 @@ fun BarChartComponent(
         val gridColor = MaterialTheme.colorScheme.secondary
         val textColor = MaterialTheme.colorScheme.secondary
 
-        // Crea i componenti per gli assi
         val axisLine = com.patrykandpatrick.vico.compose.component.lineComponent(
             color = axisColor,
             thickness = 2.dp
@@ -75,19 +74,19 @@ fun BarChartComponent(
             model = model,
             modifier = modifier.height(200.dp),
             bottomAxis = bottomAxis(
-                axis = axisLine,       // Colore asse orizzontale
-                guideline = gridLine,  // Colore linee griglia verticali
-                tick = axisLine,       // Colore ticks
-                label = text,           // Colore testo labels
+                axis = axisLine,
+                guideline = gridLine,
+                tick = axisLine,
+                label = text,
                 valueFormatter = { value, _ ->
                     data.getOrNull(value.toInt())?.first ?: ""
                 }
             ),
             startAxis = startAxis(
-                axis = axisLine,       // Colore asse verticale
-                guideline = gridLine,  // Colore linee griglia orizzontali
-                tick = axisLine,       // Colore ticks
-                label = text           // Colore testo labels
+                axis = axisLine,
+                guideline = gridLine,
+                tick = axisLine,
+                label = text
             )
         )
     }

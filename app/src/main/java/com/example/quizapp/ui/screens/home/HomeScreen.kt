@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Quiz
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -46,12 +45,10 @@ fun HomeScreen(
     val favoritesOnly by homeViewModel.favoritesOnly.collectAsState()
 
     val filteredQuizzes = state.quizzes.filter { quiz ->
-        // 1. Se la ricerca è vuota, passa sempre
         (searchQuery.isBlank() ||
                 quiz.name.contains(searchQuery, ignoreCase = true) ||
                 quiz.description.contains(searchQuery, ignoreCase = true))
                 &&
-                // 2. Se favoritesOnly è attivo, mostra solo i preferiti
                 (!favoritesOnly || quiz.isFavorite)
     }
 

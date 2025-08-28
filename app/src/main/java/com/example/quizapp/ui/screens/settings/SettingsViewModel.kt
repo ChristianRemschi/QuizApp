@@ -5,9 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.quizapp.data.database.Person
-import com.example.quizapp.data.database.QuizDAO
-import com.example.quizapp.data.repositories.QuizRepository
 import com.example.quizapp.data.repositories.SettingsRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -32,12 +29,10 @@ class SettingsViewModel(
 
     fun setPassword(password: String) {
         state = state.copy(password = password)
-//        viewModelScope.launch {
+//        viewModelScope.launch { TODO non so se ci serve ma darebbe un senso al setPassword che non usiamo sennò
 ////            repository.setPassword(password)
 ////        }
     }
-
-
 
     init {
         viewModelScope.launch {

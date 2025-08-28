@@ -5,10 +5,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import androidx.navigation.toRoute
 import com.example.quizapp.data.repositories.AuthStateManager
 import com.example.quizapp.ui.screens.home.HomeScreen
@@ -23,10 +21,8 @@ import com.example.quizapp.ui.screens.stats.StatsScreen
 import com.example.quizapp.ui.screens.stats.StatsViewModel
 import com.example.quizapp.ui.screens.theme.ThemeScreen
 import com.example.quizapp.ui.screens.theme.ThemeViewModel
-import io.ktor.http.parametersOf
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.getKoin
 
 sealed interface QuizRoute {

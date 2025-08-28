@@ -16,10 +16,6 @@ class StatsViewModel(private val repository: QuizRepository) : ViewModel() {
     private val _userScoresByQuizType = mutableStateOf<Map<String, List<Pair<String, Float>>>>(emptyMap())
     val userScoresByQuizType: State<Map<String, List<Pair<String, Float>>>> = _userScoresByQuizType
 
-    // Distribuzione dei punteggi
-    private val _scoreDistribution = mutableStateOf<List<Pair<String, Int>>>(emptyList())
-    val scoreDistribution: State<List<Pair<String, Int>>> = _scoreDistribution
-
     // Statistiche riepilogative
     private val _quizTypeStats = mutableStateOf<Map<String, QuizTypeStats>>(emptyMap())
     val quizTypeStats: State<Map<String, QuizTypeStats>> = _quizTypeStats
@@ -31,29 +27,24 @@ class StatsViewModel(private val repository: QuizRepository) : ViewModel() {
         _isLoading.value = true
         viewModelScope.launch {
             try {
-                // Ottieni i punteggi
                 val scores = repository.getScoresForPerson(userId)
 
-                // Prepara dati per il grafico complessivo
                 val allScoresWithNames = scores.map { score ->
                     val quiz = repository.getQuiz(score.quizId)
-                    quiz.name to score.score.toFloat() //TODO add data
+                    quiz.name to score.score.toFloat() //TODO add data se vogliamo poi aggiungerla nel database
                 }
                 _allUserScores.value = allScoresWithNames
 
-                // Raggruppa i punteggi per tipo di quiz
                 val scoresByQuizType = mutableMapOf<String, MutableList<Pair<String, Float>>>()
                 val statsByQuizType = mutableMapOf<String, QuizTypeStats>()
 
                 scores.forEach { score ->
                     val quiz = repository.getQuiz(score.quizId)
-                    val quizType = quiz.name ?: "Generale" // Usa "Generale" se il tipo non è specificato
+                    val quizType = quiz.name
 
-                    // Aggiungi al gruppo per tipo di quiz
                     val scoreEntry = quiz.name to score.score.toFloat()//TODO add data
                     scoresByQuizType.getOrPut(quizType) { mutableListOf() }.add(scoreEntry)
 
-                    // Aggiorna le statistiche per questo tipo di quiz
                     val currentStats = statsByQuizType.getOrPut(quizType) {
                         QuizTypeStats(quizType, 0, 0, 0f, 0, 0)
                     }
@@ -68,24 +59,14 @@ class StatsViewModel(private val repository: QuizRepository) : ViewModel() {
 
                 _userScoresByQuizType.value = scoresByQuizType
 
-                // Calcola le medie per ogni tipo di quiz
                 val finalStats = statsByQuizType.mapValues { (_, stats) ->
                     stats.copy(averageScore = stats.totalScore / stats.totalAttempts.toFloat())
                 }
                 _quizTypeStats.value = finalStats
 
-                // Calcola la distribuzione complessiva
-                _scoreDistribution.value = listOf(
-                    "Excellent" to scores.count { it.score >= 8 },
-                    "Good" to scores.count { it.score in 5..7 },
-                    "Poor" to scores.count { it.score < 5 }
-                )
-
             } catch (e: Exception) {
-                // Gestisci errore
                 _allUserScores.value = emptyList()
                 _userScoresByQuizType.value = emptyMap()
-                _scoreDistribution.value = emptyList()
                 _quizTypeStats.value = emptyMap()
             } finally {
                 _isLoading.value = false
@@ -94,7 +75,6 @@ class StatsViewModel(private val repository: QuizRepository) : ViewModel() {
     }
 }
 
-// Classe per le statistiche di ogni tipo di quiz
 data class QuizTypeStats(
     val quizType: String,
     val totalAttempts: Int,

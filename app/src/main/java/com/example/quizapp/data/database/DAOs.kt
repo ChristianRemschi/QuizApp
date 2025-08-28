@@ -33,9 +33,6 @@ interface QuizDAO {
     @Query("SELECT * FROM Quiz WHERE id = :id LIMIT 1")
     suspend fun getQuiz(id: Int): Quiz
 
-//    @Query("SELECT * FROM Score WHERE personId = :id")
-//    suspend fun getScoresByPerson(id: Int)
-
     @Insert
     suspend fun insertQuiz(quiz: Quiz): Long
 
@@ -98,8 +95,8 @@ interface QuizDAO {
         // Quiz 1 - Matematica
         val quizId1 = insertQuiz(
             Quiz(
-                name = "Matematica Base",
-                description = "Quiz per principianti",
+                name = "Basic Math",
+                description = "Quiz for beginners",
                 imageUri = "android.resource://com.example.quizapp/drawable/math_quiz",
                 isComplete = true,
                 isFavorite = false
@@ -109,7 +106,7 @@ interface QuizDAO {
         // Domanda 1
         val questionId1 = insertQuestion(
             Question(
-                questionText = "Quanto fa 2+2?",
+                questionText = "How much is 2+2?",
                 quizId = quizId1
             )
         ).toInt()
@@ -122,7 +119,7 @@ interface QuizDAO {
         // Domanda 2
         val questionId2 = insertQuestion(
             Question(
-                questionText = "Quanto fa 3×5?",
+                questionText = "How much is 3×5?",
                 quizId = quizId1
             )
         ).toInt()
@@ -135,7 +132,7 @@ interface QuizDAO {
 // Domanda 3
         val questionId3 = insertQuestion(
             Question(
-                questionText = "Quanto fa 12 ÷ 4?",
+                questionText = "How much is 12 ÷ 4?",
                 quizId = quizId1
             )
         ).toInt()
@@ -147,7 +144,7 @@ interface QuizDAO {
 // Domanda 4
         val questionId4 = insertQuestion(
             Question(
-                questionText = "Qual è la radice quadrata di 64?",
+                questionText = "What is the square root of 64?",
                 quizId = quizId1
             )
         ).toInt()
@@ -159,7 +156,7 @@ interface QuizDAO {
 // Domanda 5
         val questionId5 = insertQuestion(
             Question(
-                questionText = "Quanto fa 7²?",
+                questionText = "How much is 7²?",
                 quizId = quizId1
             )
         ).toInt()
@@ -171,7 +168,7 @@ interface QuizDAO {
 // Domanda 6
         val questionId6 = insertQuestion(
             Question(
-                questionText = "Qual è il 50% di 100?",
+                questionText = "What is 50% of 100?",
                 quizId = quizId1
             )
         ).toInt()
@@ -183,7 +180,7 @@ interface QuizDAO {
 // Domanda 7
         val questionId7 = insertQuestion(
             Question(
-                questionText = "Quanto fa 9 - 5 + 3?",
+                questionText = "How much is 9 - 5 + 3?",
                 quizId = quizId1
             )
         ).toInt()
@@ -195,7 +192,7 @@ interface QuizDAO {
 // Domanda 8
         val questionId8 = insertQuestion(
             Question(
-                questionText = "Qual è il risultato di 4 × (3 + 2)?",
+                questionText = "How much is 4 × (3 + 2)?",
                 quizId = quizId1
             )
         ).toInt()
@@ -207,7 +204,7 @@ interface QuizDAO {
 // Domanda 9
         val questionId9 = insertQuestion(
             Question(
-                questionText = "Quanto fa 18 ÷ 3 × 2?",
+                questionText = "How much is 18 ÷ 3 × 2?",
                 quizId = quizId1
             )
         ).toInt()
@@ -219,7 +216,7 @@ interface QuizDAO {
 // Domanda 10
         val questionId10 = insertQuestion(
             Question(
-                questionText = "Qual è il numero primo tra questi?",
+                questionText = "Which is the prime number among these?",
                 quizId = quizId1
             )
         ).toInt()
@@ -231,8 +228,8 @@ interface QuizDAO {
         // Quiz 2 - Storia
         val quizId2 = insertQuiz(
             Quiz(
-                name = "Storia Antica",
-                description = "Quiz sull'antica Roma",
+                name = "Ancient History",
+                description = "Quiz about ancient Rome",
                 imageUri = "android.resource://com.example.quizapp/drawable/storia",
                 isComplete = false,
                 isFavorite = false
@@ -242,7 +239,7 @@ interface QuizDAO {
         // Domanda 1
         val questionId11 = insertQuestion(
             Question(
-                questionText = "Chi fu il primo imperatore romano?",
+                questionText = "Who was the first Roman emperor?",
                 quizId = quizId2
             )
         ).toInt()
@@ -254,7 +251,7 @@ interface QuizDAO {
         //Domanda 2
         val questionId12 = insertQuestion(
             Question(
-                questionText = "Quando è crollato l'impero romano?",
+                questionText = "When the Roman Empire Collapsed?",
                 quizId = quizId2
             )
         ).toInt()
@@ -265,8 +262,8 @@ interface QuizDAO {
 
         val quizId3 = insertQuiz(
                 Quiz(
-                    name = "Geografia",
-                    description = "Capitali e paesi del mondo",
+                    name = "Geography",
+                    description = "Capitals and countries of the world",
                     imageUri = "android.resource://com.example.quizapp/drawable/geography_quiz",
                     isComplete = false,
                     isFavorite = false
@@ -275,23 +272,23 @@ interface QuizDAO {
 
         val questionId13 = insertQuestion(
             Question(
-                questionText = "Qual è la capitale della Francia?",
+                questionText = "What is the capital of France?",
                 quizId = quizId3
             )
         ).toInt()
 
-        insertAnswer(Answer(answerText = "Parigi", questionId = questionId13, isCorrect = true))
-        insertAnswer(Answer(answerText = "Lione", questionId = questionId13, isCorrect = false))
-        insertAnswer(Answer(answerText = "Marsiglia", questionId = questionId13, isCorrect = false))
+        insertAnswer(Answer(answerText = "Paris", questionId = questionId13, isCorrect = true))
+        insertAnswer(Answer(answerText = "Lyon", questionId = questionId13, isCorrect = false))
+        insertAnswer(Answer(answerText = "Marseille", questionId = questionId13, isCorrect = false))
 
         val q32 = insertQuestion(
             Question(
-                questionText = "Quale fiume attraversa l'Egitto?", quizId = quizId3)).toInt()
-        insertAnswer(Answer(answerText = "Nilo",questionId = q32, isCorrect = true))
-        insertAnswer(Answer(answerText = "Amazonas", questionId = q32, isCorrect = false))
-        insertAnswer(Answer(answerText = "Danubio", questionId = q32, isCorrect = false))
+                questionText = "Which river flows through Egypt?", quizId = quizId3)).toInt()
+        insertAnswer(Answer(answerText = "Nile",questionId = q32, isCorrect = true))
+        insertAnswer(Answer(answerText = "Amazon River", questionId = q32, isCorrect = false))
+        insertAnswer(Answer(answerText = "Danube", questionId = q32, isCorrect = false))
 
-        val q33 = insertQuestion(Question(questionText = "Quanti stati compongono gli USA?", quizId = quizId3)).toInt()
+        val q33 = insertQuestion(Question(questionText = "How many states make up the USA?", quizId = quizId3)).toInt()
         insertAnswer(Answer(answerText ="48", questionId =q33, isCorrect =false))
         insertAnswer(Answer(answerText ="50", questionId =q33, isCorrect =true))
         insertAnswer(Answer(answerText ="52", questionId =q33, isCorrect =false))
@@ -300,8 +297,8 @@ interface QuizDAO {
 // Quiz 4 - Scienze
         val quizId4 = insertQuiz(
             Quiz(
-                name = "Scienze",
-                description = "Quiz di scienze naturali",
+                name = "Science",
+                description = "Natural Science Quiz",
                 imageUri = "android.resource://com.example.quizapp/drawable/science_quiz",
                 isComplete = false,
                 isFavorite = false
@@ -310,21 +307,21 @@ interface QuizDAO {
 
         val questionId14 = insertQuestion(
             Question(
-                questionText = "Qual è il pianeta più vicino al Sole?",
+                questionText = "What is the closest planet to the Sun?",
                 quizId = quizId4
             )
         ).toInt()
 
-        insertAnswer(Answer(answerText = "Mercurio", questionId = questionId14, isCorrect = true))
-        insertAnswer(Answer(answerText = "Venere", questionId = questionId14, isCorrect = false))
-        insertAnswer(Answer(answerText = "Marte", questionId = questionId14, isCorrect = false))
+        insertAnswer(Answer(answerText = "Mercury", questionId = questionId14, isCorrect = true))
+        insertAnswer(Answer(answerText = "Venus", questionId = questionId14, isCorrect = false))
+        insertAnswer(Answer(answerText = "Mars", questionId = questionId14, isCorrect = false))
 
-        val q42 = insertQuestion(Question(questionText = "Qual è la formula chimica dell’acqua?", quizId =quizId4)).toInt()
+        val q42 = insertQuestion(Question(questionText = "What is the chemical formula of water?", quizId =quizId4)).toInt()
         insertAnswer(Answer(answerText ="CO2", questionId =q42, isCorrect =false))
         insertAnswer(Answer(answerText ="H2O", questionId =q42, isCorrect =true))
         insertAnswer(Answer(answerText ="O2", questionId =q42, isCorrect =false))
 
-        val q43 = insertQuestion(Question(questionText = "Chi propose la teoria dell’evoluzione?", quizId =quizId4)).toInt()
+        val q43 = insertQuestion(Question(questionText = "Who proposed the theory of evolution?", quizId =quizId4)).toInt()
         insertAnswer(Answer(answerText ="Einstein", questionId =q43, isCorrect =false))
         insertAnswer(Answer(answerText ="Darwin", questionId =q43, isCorrect =true))
         insertAnswer(Answer(answerText ="Newton", questionId =q43, isCorrect =false))
@@ -333,8 +330,8 @@ interface QuizDAO {
 // Quiz 5 - Informatica
         val quizId5 = insertQuiz(
             Quiz(
-                name = "Informatica",
-                description = "Quiz sul mondo dei computer",
+                name = "Informatics",
+                description = "Quiz on the world of computers",
                 imageUri = "content://cs_quiz.jpg",
                 isComplete = false,
                 isFavorite = false
@@ -343,7 +340,7 @@ interface QuizDAO {
 
         val questionId15 = insertQuestion(
             Question(
-                questionText = "Chi ha inventato il World Wide Web?",
+                questionText = "Who invented the World Wide Web?",
                 quizId = quizId5
             )
         ).toInt()
@@ -352,17 +349,17 @@ interface QuizDAO {
         insertAnswer(Answer(answerText = "Bill Gates", questionId = questionId15, isCorrect = false))
         insertAnswer(Answer(answerText = "Steve Jobs", questionId = questionId15, isCorrect = false))
 
-        val q61 = insertQuestion(Question(questionText ="Chi è considerato il padre del computer?",quizId = quizId5)).toInt()
+        val q61 = insertQuestion(Question(questionText ="Who is considered the father of the computer?",quizId = quizId5)).toInt()
         insertAnswer(Answer(answerText ="Charles Babbage", questionId =q61, isCorrect = true))
         insertAnswer(Answer(answerText ="Alan Turing", questionId =q61, isCorrect =false))
         insertAnswer(Answer(answerText ="Bill Gates", questionId =q61, isCorrect =false))
 
-        val q62 = insertQuestion(Question(questionText ="Cosa significa HTML?", quizId = quizId5)).toInt()
+        val q62 = insertQuestion(Question(questionText ="What does HTML mean?", quizId = quizId5)).toInt()
         insertAnswer(Answer(answerText ="HyperText Markup Language", questionId =q62, isCorrect = true))
         insertAnswer(Answer(answerText ="High Tech Modern Language", questionId =q62, isCorrect =false))
         insertAnswer(Answer(answerText ="Home Tool Machine Language", questionId =q62, isCorrect =false))
 
-        val q63 = insertQuestion(Question(questionText ="Quale azienda ha creato Android?", quizId = quizId5)).toInt()
+        val q63 = insertQuestion(Question(questionText ="Which company created Android?", quizId = quizId5)).toInt()
         insertAnswer(Answer(answerText ="Apple", questionId =q63, isCorrect =false))
         insertAnswer(Answer(answerText ="Google", questionId =q63, isCorrect =true))
         insertAnswer(Answer(answerText ="Microsoft", questionId =q63, isCorrect =false))
@@ -372,7 +369,7 @@ interface QuizDAO {
         val quizId6 = insertQuiz(
             Quiz(
                 name = "Sport",
-                description = "Quiz sullo sport",
+                description = "Sports quiz",
                 imageUri = "content://sport_quiz.jpg",
                 isComplete = false,
                 isFavorite = false
@@ -381,7 +378,7 @@ interface QuizDAO {
 
         val questionId16 = insertQuestion(
             Question(
-                questionText = "Quanti giocatori ha una squadra di calcio in campo?",
+                questionText = "How many players does a soccer team have on the field?",
                 quizId = quizId6
             )
         ).toInt()
@@ -390,9 +387,9 @@ interface QuizDAO {
         insertAnswer(Answer(answerText = "10", questionId = questionId16, isCorrect = false))
         insertAnswer(Answer(answerText = "11", questionId = questionId16, isCorrect = true))
 
-        val q51 = insertQuestion(Question(questionText ="In che sport si usa la palla ovale?", quizId =quizId6)).toInt()
+        val q51 = insertQuestion(Question(questionText ="In which sport is the oval ball used?", quizId =quizId6)).toInt()
         insertAnswer(Answer(answerText ="Rugby", questionId =q51, isCorrect =true))
-        insertAnswer(Answer(answerText ="Calcio", questionId =q51,isCorrect = false))
+        insertAnswer(Answer(answerText ="Soccer", questionId =q51,isCorrect = false))
         insertAnswer(Answer(answerText ="Basket", questionId =q51, isCorrect =false))
     }
 }

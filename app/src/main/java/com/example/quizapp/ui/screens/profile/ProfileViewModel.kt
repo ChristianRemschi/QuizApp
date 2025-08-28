@@ -1,6 +1,5 @@
 package com.example.quizapp.ui.screens.profile
 
-import androidx.collection.emptyIntList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quizapp.data.database.Badge
@@ -29,10 +28,8 @@ class ProfileViewModel(
 
     fun loadUserData(userId: Int) {
         viewModelScope.launch {
-            // Carica i dati dell'utente
             _userData.value = quizRepository.getPersonById(userId)
 
-            // Carica i punteggi dell'utente con i dettagli dei quiz
             val scores = quizRepository.getScoresForPerson(userId)
             val quizzesWithScores = scores.map { score ->
                 val quiz = quizRepository.getQuiz(score.quizId)
