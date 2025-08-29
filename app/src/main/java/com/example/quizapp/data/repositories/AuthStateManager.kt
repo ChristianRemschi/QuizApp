@@ -5,6 +5,8 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 
 class AuthStateManager(private val userPreferences: DataStore<Preferences>) {
@@ -23,6 +25,12 @@ class AuthStateManager(private val userPreferences: DataStore<Preferences>) {
         userPreferences.edit { preferences ->
             preferences.remove(USER_ID_KEY)
         }
+    }
+
+    private val _loggedInUserId = MutableStateFlow<Int?>(null)
+    val loggedInUserId: StateFlow<Int?> = _loggedInUserId
+    fun getLoggedInUserId(): Int? {
+        return _loggedInUserId.value
     }
 
     companion object {

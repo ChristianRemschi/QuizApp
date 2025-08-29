@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import androidx.room.Upsert
+import com.example.quizapp.data.models.QuizWithFavorite
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -17,9 +18,6 @@ interface QuizDAO {
 
     @Query("SELECT COUNT(*) FROM Quiz")
     suspend fun getQuizzesCount(): Int
-
-    @Query("SELECT * FROM Quiz WHERE isFavorite = 1")
-    fun getFavorites(): Flow<List<Quiz>>
 
     @Update
     suspend fun updateQuiz(quiz: Quiz)
@@ -90,6 +88,33 @@ interface QuizDAO {
     @Query("SELECT * FROM Person WHERE id = :personId LIMIT 1")
     suspend fun getPersonById(personId: Int): Person?
 
+    @Query("SELECT EXISTS(SELECT 1 FROM FavoriteQuiz WHERE personId = :personId AND quizId = :quizId)")
+    suspend fun exists(personId: Int, quizId: Int): Boolean
+
+    @Query("DELETE FROM FavoriteQuiz WHERE personId = :personId AND quizId = :quizId")
+    suspend fun deleteByPersonAndQuiz(personId: Int, quizId: Int)
+
+    @Query("""
+    SELECT q.id, q.name, q.description, q.imageUri, q.isComplete,
+           CASE WHEN f.id IS NOT NULL THEN 1 ELSE 0 END AS isFavorite
+    FROM Quiz q
+    LEFT JOIN FavoriteQuiz f 
+      ON q.id = f.quizId AND (:personId IS NOT NULL AND f.personId = :personId)
+""")
+    fun getQuizzesWithFavorite(personId: Int?): Flow<List<QuizWithFavorite>>
+
+    @Query("SELECT * FROM Quiz")
+    fun getAllQuizzes(): Flow<List<Quiz>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertFavorite(fav: FavoriteQuiz)
+
+    @Delete
+    suspend fun deleteFavorite(fav: FavoriteQuiz)
+
+    @Query("SELECT * FROM FavoriteQuiz WHERE personId = :userId AND quizId = :quizId LIMIT 1")
+    suspend fun getFavorite(userId: Int, quizId: Int): FavoriteQuiz?
+
     @Transaction
     suspend fun populateSampleData() {
         // Quiz 1 - Matematica
@@ -98,8 +123,7 @@ interface QuizDAO {
                 name = "Basic Math",
                 description = "Quiz for beginners",
                 imageUri = "android.resource://com.example.quizapp/drawable/math_quiz",
-                isComplete = true,
-                isFavorite = false
+                isComplete = true
             )
         ).toInt()
 
@@ -231,8 +255,7 @@ interface QuizDAO {
                 name = "Ancient History",
                 description = "Quiz about ancient Rome",
                 imageUri = "android.resource://com.example.quizapp/drawable/storia",
-                isComplete = false,
-                isFavorite = false
+                isComplete = false
             )
         ).toInt()
 
@@ -265,8 +288,7 @@ interface QuizDAO {
                     name = "Geography",
                     description = "Capitals and countries of the world",
                     imageUri = "android.resource://com.example.quizapp/drawable/geography_quiz",
-                    isComplete = false,
-                    isFavorite = false
+                    isComplete = false
                 )
                 ).toInt()
 
@@ -300,8 +322,7 @@ interface QuizDAO {
                 name = "Science",
                 description = "Natural Science Quiz",
                 imageUri = "android.resource://com.example.quizapp/drawable/science_quiz",
-                isComplete = false,
-                isFavorite = false
+                isComplete = false
             )
         ).toInt()
 
@@ -333,8 +354,7 @@ interface QuizDAO {
                 name = "Informatics",
                 description = "Quiz on the world of computers",
                 imageUri = "content://cs_quiz.jpg",
-                isComplete = false,
-                isFavorite = false
+                isComplete = false
             )
         ).toInt()
 
@@ -371,8 +391,7 @@ interface QuizDAO {
                 name = "Sport",
                 description = "Sports quiz",
                 imageUri = "content://sport_quiz.jpg",
-                isComplete = false,
-                isFavorite = false
+                isComplete = false
             )
         ).toInt()
 

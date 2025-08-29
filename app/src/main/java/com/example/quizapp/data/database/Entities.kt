@@ -22,8 +22,6 @@ data class Quiz (
     @ColumnInfo
     var isComplete: Boolean,
 
-    @ColumnInfo(defaultValue = "0")
-    var isFavorite: Boolean = false
 )
 
 @Entity(
@@ -145,4 +143,26 @@ data class PersonBadge(
     val personId: Int,
     val badgeId: Int,
     val dateEarned: Long = System.currentTimeMillis()
+)
+
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = Person::class,
+            parentColumns = ["id"],
+            childColumns = ["personId"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = Quiz::class,
+            parentColumns = ["id"],
+            childColumns = ["quizId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
+data class FavoriteQuiz(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val personId: Int,
+    val quizId: Int
 )

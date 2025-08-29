@@ -1,5 +1,6 @@
 package com.example.quizapp.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -8,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.example.quizapp.data.models.QuizWithFavorite
 import com.example.quizapp.data.repositories.AuthStateManager
 import com.example.quizapp.ui.screens.home.HomeScreen
 import com.example.quizapp.ui.screens.play.PlayScreen
@@ -34,6 +36,10 @@ sealed interface QuizRoute {
     @Serializable data class Stats(val userId: Int) : QuizRoute
 }
 
+fun QuizRoute.QuizDetails.toRoute(): String = "quizDetails/${this.quizId}"
+
+
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun QuizNavGraph(navController: NavHostController) {
     val authStateManager = remember {
@@ -50,12 +56,19 @@ fun QuizNavGraph(navController: NavHostController) {
     ) {
         composable<QuizRoute.Home> {
             quizVm.populateDatabase()
-            HomeScreen(quizState, navController)
+            val userId by authStateManager.currentUserId.collectAsStateWithLifecycle(null)
+            HomeScreen(navController = navController, userId = userId)
         }
-        composable<QuizRoute.QuizDetails> { backStackEntry ->
-            val route = backStackEntry.toRoute<QuizRoute.QuizDetails>()
-            val quiz = requireNotNull(quizState.quizzes.find { it.id == route.quizId })
-            QuizDetailsScreen(quiz, navController)
+        composable(
+            route = "quizDetails/{quizId}"
+        ) { backStackEntry ->
+            val quizId = backStackEntry.arguments?.getString("quizId")?.toIntOrNull()
+            if (quizId != null) {
+                val quiz = quizVm.state.value.quizzes.find { it.id == quizId }
+                if (quiz != null) {
+                    QuizDetailsScreen(quiz.id, navController = navController, quizVm = quizVm)
+                }
+            }
         }
 
         composable<QuizRoute.Settings> {
